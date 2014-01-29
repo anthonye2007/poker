@@ -1,3 +1,4 @@
+package edu.poker.elliott;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,7 +23,7 @@ public class ESTHER {
         //3 = "tournament" where there are N GAMES played,
         //         after each GAME the players shift one seat and the GAME
         //         is repeated (with the same hands from the previous GAME)
-        int mode = 1;
+        int mode = 3;
 
         Player[] players = new Player[6];
 

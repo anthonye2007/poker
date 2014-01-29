@@ -1,38 +1,34 @@
+package edu.poker.elliott;
 /*
  * ESTHER
  * The Educational Simulated Texas Hold Em Room
  */
 
-
-import java.util.Random;
-
 /**
  *
  * @author schafer
  */
-public class AgentRandomPlayer extends Player {
+public class AgentAlwaysCall extends Player {
+
     private final int num;
 
-    public AgentRandomPlayer(int num) {
-        this.num=num;
+    public AgentAlwaysCall(int num) {
+        this.num = num;
     }
 
-    
     @Override
     public String getScreenName() {
-        return "rand"+this.num;
+        return "Call" + this.num;
     }
-
-
 
     @Override
     public String getAction(TableData data) {
         String pull = data.getValidActions();
         String[] choices = pull.split(",");
-        Random randomGenerator = new Random();
-        int index = randomGenerator.nextInt(choices.length);
-        return choices[index];
+        if (pull.contains("call")) {
+            return "call";
+        } else  {
+            return "check";
+        }
     }
-    
-    
 }

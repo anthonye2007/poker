@@ -1,3 +1,4 @@
+package edu.poker.elliott;
 /*
  * ESTHER
  * The Educational Simulated Texas Hold Em Room
