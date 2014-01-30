@@ -12,6 +12,8 @@ public class Elliott_Tools {
 	public static final int FOUR_OF_A_KIND = 8;
 	public static final int STRAIGHT_FLUSH = 9;
 	
+	public static final int CARDS_PER_HAND = 5;
+	
 	public static int getPointsOfHand(int[] pocket, int[] board) {
 		int[] allCards = concat(pocket, board);
 		
@@ -59,7 +61,27 @@ public class Elliott_Tools {
 	}
 	
 	public static boolean sameSuit(int a, int b) {
-		return a / 13 == b / 13;
+		return getSuit(a) == getSuit(b);
+	}
+	
+	public static boolean isPossibleStraight(int a, int b) {
+		boolean isClose = false;
+		
+		int diff = Math.abs(getRank(a) - getRank(b));
+		
+		if (diff <= CARDS_PER_HAND - 1) {
+			isClose = true;
+		}
+		
+		return isClose;
+	}
+	
+	public static int getSuit(int card) {
+		return card / 13;
+	}
+	
+	public static int getRank(int card) {
+		return card % 13;
 	}
 
 }

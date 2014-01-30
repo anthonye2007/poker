@@ -18,7 +18,9 @@ public class Elliott extends Player {
 	public String getAction(TableData data) {
 		int[] pocket = data.getPocket();
 		
-		if (Elliott_Tools.sameRank(pocket) || Elliott_Tools.sameSuit(pocket)) {
+		if (Elliott_Tools.sameRank(pocket) || 
+				Elliott_Tools.sameSuit(pocket) || 
+				Elliott_Tools.isPossibleStraight(pocket[0], pocket[1])) {
 			 return aggressive(data);
 		} else {
 			return passive(data);
