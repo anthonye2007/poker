@@ -318,7 +318,7 @@ public class GameManager {
                 //If the player has a better or hand they must reveal
                 int compareVal = outcomes[nextPlayer].compareTo(
                         outcomes[winners.get(0)]);
-                if (compareVal > 0) {
+                if (compareVal >= 0) {
                     pocketCards[nextPlayer] = dealer.getPocket(nextPlayer);
                     //If better than reset besthands to this new betterhand
                     if (compareVal == 1) {
