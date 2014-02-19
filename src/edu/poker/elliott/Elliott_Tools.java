@@ -15,8 +15,10 @@ public class Elliott_Tools {
 	public static final int CARDS_PER_HAND = 5;
 	
 	public static int getPointsOfHand(int[] pocket, int[] board) {
-		int[] allCards = concat(pocket, board);
-		
+		return getPointsOfHand(concat(pocket, board));
+	}
+	
+	public static int getPointsOfHand(int[] allCards) {
 		if (EstherTools.containsStraightFlush(allCards)) {
 			return STRAIGHT_FLUSH;
 		} else if (EstherTools.containsFourOfAKind(allCards)) {
@@ -36,7 +38,6 @@ public class Elliott_Tools {
 		} else {
 			return NO_PAIR;
 		}
-		
 	}
 	
 	public static int[] concat(int[] A, int[] B) {
