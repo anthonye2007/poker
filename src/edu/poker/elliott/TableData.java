@@ -43,7 +43,7 @@ public class TableData {
     //The ArrayLists MAY be empty if it is early in the hand
     private final ArrayList<String>[] handActions;  
     
-    //This is a string which is a comma separatated list of valid actions
+    //This is a string which is a comma separated list of valid actions
     //for this player at this moment
     //Either "fold,check,bet"  "fold,call,raise" or "fold,call"
     private final String validActions;

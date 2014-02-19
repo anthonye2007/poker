@@ -17,8 +17,10 @@ public class Elliott_Runner {
 	    players[3] = new AgentAlwaysRaise(1);
 	    players[4] = new AgentRandomPlayer(3);
 		players[5] = new Elliott();
+		
+		int tournamentsToPlay = 100; 
 
-		Elliott_Runner runner = new Elliott_Runner(players, 1000);
+		Elliott_Runner runner = new Elliott_Runner(players, tournamentsToPlay);
 		runner.play();
 	}
 	
@@ -28,7 +30,7 @@ public class Elliott_Runner {
 	}
 
 	/**
-	 * Plays through multiple tournaments and averages the score of each player.
+	 * Plays through multiple tournaments and prints out the score of each player.
 	 */
 	private void play() {
 		HashMap<String, Integer> runningTotals = new HashMap<String, Integer>();
@@ -98,5 +100,4 @@ public class Elliott_Runner {
        
        return outcome;
 	}
-
 }
