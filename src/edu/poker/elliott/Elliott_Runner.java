@@ -32,7 +32,7 @@ public class Elliott_Runner {
 	/**
 	 * Plays through multiple tournaments and prints out the score of each player.
 	 */
-	private void play() {
+	private int play() {
 		HashMap<String, Integer> runningTotals = new HashMap<String, Integer>();
  	    // initialize score to zero for all players
 		for (Player player : players) {
@@ -54,15 +54,23 @@ public class Elliott_Runner {
 		
 		System.out.println("Number tournaments: " + numTournaments);
 		System.out.println();
+
+        int myScore = 0;
 		
 		// average scores
 		for (Entry<String, Integer> pair : runningTotals.entrySet()) {
 			int score = pair.getValue();
 			int average = score / numTournaments;
 			String name = pair.getKey();
+
+            if (name.equals("Elliott")) {
+                myScore = average;
+            }
 			
 			System.out.println(name + ": " + average);
-		}		
+		}
+
+        return myScore;
 	}
 
 	private HashMap<String, Integer> runTournament() {
