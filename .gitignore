@@ -40,3 +40,5 @@ Session.vim
 
 build.xml
 gen/**
+.idea/
+*.iml
