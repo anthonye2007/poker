@@ -85,4 +85,14 @@ public class Elliott_Tools {
 		return card % 13;
 	}
 
+    public static boolean hasHighCard(int[] cards) {
+        boolean retVal = false;
+
+        for (int i = 0; i < cards.length; i++) {
+            if (getRank(cards[i]) > 12)
+                retVal = true;
+        }
+
+        return retVal;
+    }
 }
