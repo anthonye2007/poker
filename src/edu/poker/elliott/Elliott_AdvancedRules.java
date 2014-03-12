@@ -7,7 +7,7 @@ package edu.poker.elliott;
  * Within each set the cards are ordered from 2 up through Ace
  * */
 
-public class Elliott extends Player {
+public class Elliott_AdvancedRules extends Player {
 	
 	@Override
 	public String getScreenName() {

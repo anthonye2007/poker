@@ -4,35 +4,64 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Elliott_Runner {
+
+    public static void main(String[] args) {
+        Elliott_Runner runner = new Elliott_Runner();
+        int score = runner.play();
+        System.out.println("Score: " + score);
+    }
 	
 	private Player[] players;
 	private int numTournaments;
+    private boolean shouldPrint = false;
 
-	public static void main(String[] args) {
-		Player[] players = new Player[6];
+    public Elliott_Runner(Player player) {
+        Player[] players = new Player[6];
 
-	    players[0] = new Toben();
-	    players[1] = new Dunakey();
-	    players[2] = new Graham();
-	    players[3] = new kakavas();
-	    players[4] = new Nielsen();
-		players[5] = new Elliott();
-		
-		int tournamentsToPlay = 100; 
+        players[0] = new Toben();
+        players[1] = new Dunakey();
+        players[2] = new Graham();
+        players[3] = new kakavas();
+        players[4] = new Nielsen();
+        players[5] = player;
 
-		Elliott_Runner runner = new Elliott_Runner(players, tournamentsToPlay);
-		runner.play();
-	}
-	
-	public Elliott_Runner(Player[] players, int tournamentsToPlay) {
+        this.players = players;
+        this.numTournaments = 100;
+    }
+
+	public Elliott_Runner(Player[] players, int tournamentsToPlay, boolean shouldPrint) {
 		this.players = players;
-		numTournaments = tournamentsToPlay;
+		this.numTournaments = tournamentsToPlay;
+        this.shouldPrint = shouldPrint;
 	}
+
+    public Elliott_Runner(Player[] players, int tournamentsToPlay) {
+        this(players, tournamentsToPlay, false);
+    }
+
+    public Elliott_Runner() {
+        this(false);
+    }
+
+    public Elliott_Runner(boolean shouldPrint) {
+        Player[] players = new Player[6];
+
+        players[0] = new Toben();
+        players[1] = new Dunakey();
+        players[2] = new Graham();
+        players[3] = new kakavas();
+        players[4] = new Nielsen();
+        players[5] = new Elliott_AdvancedRules();
+
+        this.players = players;
+        this.numTournaments = 100;
+        this.shouldPrint = shouldPrint;
+    }
 
 	/**
 	 * Plays through multiple tournaments and prints out the score of each player.
 	 */
-	private int play() {
+    public int play() {
 		HashMap<String, Integer> runningTotals = new HashMap<String, Integer>();
  	    // initialize score to zero for all players
 		for (Player player : players) {
@@ -52,8 +81,7 @@ public class Elliott_Runner {
 			}
 		}
 		
-		System.out.println("Number tournaments: " + numTournaments);
-		System.out.println();
+		print("Number tournaments: " + numTournaments + "\n");
 
         int myScore = 0;
 		
@@ -66,8 +94,8 @@ public class Elliott_Runner {
             if (name.equals("Elliott")) {
                 myScore = average;
             }
-			
-			System.out.println(name + ": " + average);
+
+            print(name + ": " + average);
 		}
 
         return myScore;
@@ -103,4 +131,9 @@ public class Elliott_Runner {
        
        return outcome;
 	}
+
+    public void print(String msg) {
+        if (this.shouldPrint)
+            System.out.println(msg);
+    }
 }
