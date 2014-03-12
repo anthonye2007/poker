@@ -61,6 +61,14 @@ public class Elliott_Runner {
         this.shouldPrint = shouldPrint;
     }
 
+    public void setNumTournaments(int numTournaments) {
+        this.numTournaments = numTournaments;
+    }
+
+    public void setShouldPrint(boolean shouldPrint) {
+        this.shouldPrint = shouldPrint;
+    }
+
 	/**
 	 * Plays through multiple tournaments and prints out the score of each player.
 	 */
