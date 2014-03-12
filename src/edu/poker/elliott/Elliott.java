@@ -89,17 +89,29 @@ public class Elliott extends Player {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
+        String action = fold();
 
-        if (score >= Elliott_Tools.THREE_OF_A_KIND) {
-            // if near maximum score then raise
-            return raise(data);
-        } else if (score >= Elliott_Tools.ONE_PAIR) {
-            // if near average score then stay
-            return stay(data);
-        } else {
-            // if below average score then fold
-            return fold();
+        switch (aggressiveness) {
+            case 10: // ultra aggressive
+                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
+                break;
+            case 7:case 8:case 9: // aggressive
+                if (score >= Elliott_Tools.THREE_OF_A_KIND) action = raise(data);
+                break;
+            case 4:case 5:case 6: // middle
+                action = stay(data);
+                break;
+            case 1:case 2:case 3: // passive
+                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
+                break;
+            case 0: // ultra passive
+                action = fold();
+                break;
+            default:
+                action = stay(data);
         }
+
+        return action;
     }
 
     private String takeActionThirdRound(TableData data) {
