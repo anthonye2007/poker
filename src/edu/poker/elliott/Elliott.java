@@ -87,7 +87,7 @@ public class Elliott extends Player {
 
         switch (aggressiveness) {
             case 10: // ultra aggressive
-                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
+                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
                 break;
             case 7:case 8:case 9: // aggressive
                 if (score >= Elliott_Tools.THREE_OF_A_KIND) action = raise(data);
@@ -96,7 +96,7 @@ public class Elliott extends Player {
                 action = stay(data);
                 break;
             case 1:case 2:case 3: // passive
-                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
+                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
                 break;
             case 0: // ultra passive
                 action = fold();
