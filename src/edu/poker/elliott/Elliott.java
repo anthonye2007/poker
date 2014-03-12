@@ -45,7 +45,7 @@ public class Elliott extends Player {
 
     private String takeActionFirstRound(TableData data) {
         int[] pocket = data.getPocket();
-        String action = null; // if this may fail, then fail hard
+        String action = fold();
 
         switch (aggressiveness) {
             case 10: // ultra aggressive
@@ -54,15 +54,11 @@ public class Elliott extends Player {
                         || Elliott_Tools.isPossibleStraight(pocket[0], pocket[1])
                         || Elliott_Tools.hasHighCard(pocket)) {
                     action = raise(data);
-                } else {
-                    action = fold();
                 }
                 break;
             case 7:case 8:case 9: // aggressive
                 if (Elliott_Tools.sameRank(pocket) || Elliott_Tools.sameSuit(pocket)) {
                     action = raise(data);
-                } else {
-                    action = fold();
                 }
                 break;
             case 4:case 5:case 6: // middle
@@ -71,8 +67,6 @@ public class Elliott extends Player {
             case 1:case 2:case 3: // passive
                 if (Elliott_Tools.sameRank(pocket) && Elliott_Tools.sameSuit(pocket)) {
                     action = raise(data);
-                } else {
-                    action = fold();
                 }
                 break;
             case 0: // ultra passive
