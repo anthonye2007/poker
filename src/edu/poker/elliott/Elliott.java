@@ -119,13 +119,29 @@ public class Elliott extends Player {
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
 
-        if (score >= Elliott_Tools.FULL_HOUSE) {
-            return raise(data);
-        } else if (score >= Elliott_Tools.TWO_PAIR) {
-            return stay(data);
-        } else {
-            return fold();
+        String action = fold();
+
+        switch (aggressiveness) {
+            case 10: // ultra aggressive
+                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
+                break;
+            case 7:case 8:case 9: // aggressive
+                if (score >= Elliott_Tools.TWO_PAIR) action = raise(data);
+                break;
+            case 4:case 5:case 6: // middle
+                action = stay(data);
+                break;
+            case 1:case 2:case 3: // passive
+                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
+                break;
+            case 0: // ultra passive
+                action = fold();
+                break;
+            default:
+                action = stay(data);
         }
+
+        return action;
     }
 
     private String takeActionFourthRound(TableData data) {
@@ -139,13 +155,29 @@ public class Elliott extends Player {
             return fold();
         }
 
-        if (score >= Elliott_Tools.FULL_HOUSE) {
-            return raise(data);
-        } else if (score >= Elliott_Tools.TWO_PAIR) {
-            return stay(data);
-        } else {
-            return fold();
+        String action = fold();
+
+        switch (aggressiveness) {
+            case 10: // ultra aggressive
+                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
+                break;
+            case 7:case 8:case 9: // aggressive
+                if (score >= Elliott_Tools.TWO_PAIR) action = raise(data);
+                break;
+            case 4:case 5:case 6: // middle
+                action = stay(data);
+                break;
+            case 1:case 2:case 3: // passive
+                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
+                break;
+            case 0: // ultra passive
+                action = fold();
+                break;
+            default:
+                action = stay(data);
         }
+
+        return action;
     }
 
     private String stay(TableData data) {
