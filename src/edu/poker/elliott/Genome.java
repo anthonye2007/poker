@@ -68,4 +68,8 @@ public class Genome {
         return new String(chars);
     }
 
+    public boolean equals(Genome other) {
+        return toString().equals(other.toString());
+    }
+
 }

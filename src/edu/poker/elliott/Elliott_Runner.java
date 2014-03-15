@@ -21,16 +21,16 @@ public class Elliott_Runner {
     public Elliott_Runner(Player player) {
         Player[] players = new Player[6];
 
-        /*players[0] = new Toben();
+        players[0] = new Toben();
         players[1] = new Dunakey();
         players[2] = new Graham();
         players[3] = new kakavas();
-        players[4] = new Nielsen();*/
-        players[0] = new Elliott(new Genome("rrrfssrsrsrsrrrr"));
+        players[4] = new Nielsen();
+        /*players[0] = new Elliott(new Genome("rrrfssrsrsrsrrrr"));
         players[1] = new Elliott(new Genome("rrrfssrsrrrrrrrr"));
         players[2] = new Elliott(new Genome("rrrfssrsrrrsrrrr"));
         players[3] = new Elliott(new Genome("rrrfssrsrsrrrrrr"));
-        players[4] = new Elliott(new Genome("rrrsssrsrsrsrsrr"));
+        players[4] = new Elliott(new Genome("rrrsssrsrsrsrsrr"));*/
         players[5] = player;
 
         this.players = players;

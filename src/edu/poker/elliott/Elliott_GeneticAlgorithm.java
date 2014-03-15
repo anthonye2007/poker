@@ -44,21 +44,98 @@ public class Elliott_GeneticAlgorithm {
 
         // keep top 5%
         List<Genome> elites = keepElites(sortedGenomes);
+
+        // keep top score
         Genome topGenome = elites.get(0);
         Integer topScore = genomes.get(topGenome);
         topScores.add(topScore);
 
+        // tweak 20%
         List<Genome> tweaks = tweakElites(elites);
 
-        // fill rest of next population with randomly generated genomes
-        int numGenomesStillNeeded = numGenomes - elites.size() - tweaks.size();
-        List<Genome> randoms = randomGenomes(numGenomesStillNeeded);
+        // about 50%
+        List<Genome> crossovers = crossoverAll(genomes.keySet());
 
-        List<Genome> newPopulation = new ArrayList<>(elites);
-        newPopulation.addAll(tweaks);
+        List<Genome> possibleDuplicates = new ArrayList<>(elites);
+        possibleDuplicates.addAll(tweaks);
+        possibleDuplicates.addAll(crossovers);
+        List<Genome> newPopulation = removeDuplicates(possibleDuplicates);
+
+        // fill rest of next population with randomly generated genomes
+        int numGenomesStillNeeded = numGenomes - newPopulation.size();
+        List<Genome> randoms = randomGenomes(numGenomesStillNeeded);
         newPopulation.addAll(randoms);
 
         return runGeneration(newPopulation, topScores);
+    }
+
+    private List<Genome> removeDuplicates(List<Genome> newPopulation) {
+        List<Genome> toAdd = new ArrayList<>();
+
+        while (newPopulation.size() > 0) {
+            Genome genome = newPopulation.remove(0);
+            if (!isDuplicate(newPopulation, genome)) {
+                toAdd.add(genome);
+            }
+        }
+
+        return toAdd;
+    }
+
+    private boolean isDuplicate(List<Genome> list, Genome genome) {
+        for(Genome possibleDuplicate : list) {
+            if (genome.equals(possibleDuplicate))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true 50% of the time.
+     */
+    private boolean shouldAdd() {
+        Random rand = new Random();
+        int num = rand.nextInt(2);
+
+        return num == 1;
+    }
+
+
+    private List<Genome> crossoverAll(Set<Genome> genomes) {
+        List<Genome> crossedGenomes = new ArrayList<>(genomes.size());
+
+        List<Genome> toCross = new ArrayList<>();
+        for(Genome genome : genomes) {
+            if (shouldAdd())
+                toCross.add(genome);
+        }
+
+        Random rand = new Random();
+
+        while (toCross.size() > 2) {
+            // cross two random genomes
+            Genome first = toCross.remove(rand.nextInt(toCross.size()));
+            Genome second = toCross.remove(rand.nextInt(toCross.size()));
+
+            Genome crossed = cross(first, second);
+            crossedGenomes.add(crossed);
+        }
+
+        return crossedGenomes;
+    }
+
+    private Genome cross(Genome first, Genome second) {
+        String firstStr = first.toString();
+        int minLength = 2;
+
+        int pivot = randomIntFromTo(minLength, firstStr.length() - minLength);
+
+        String subFirst = firstStr.substring(0, pivot);
+        String subSecond = second.toString().substring(pivot);
+
+        String crossedGenome = subFirst + subSecond;
+
+        return new Genome(crossedGenome);
     }
 
     private boolean notChanging(List<Integer> topScores) {
@@ -152,5 +229,11 @@ public class Elliott_GeneticAlgorithm {
         runner.setNumTournaments(5);
 
         return runner.play();
+    }
+
+    private int randomIntFromTo(int from, int to) {
+        Random rand = new Random();
+
+        return rand.nextInt(to - from) + from;
     }
 }
