@@ -750,7 +750,7 @@ public class EstherTools {
         for (int x = rankCounts.length - 1; x >= 0; x--) {
             if (rankCounts[x] > 2) {
                 //error state.  Shouldn't hit here
-                System.out.println("ERROR Found more than two of one card in two pair");
+                //System.out.println("ERROR Found more than two of one card in two pair");
                 return invalid;
             }
             if (rankCounts[x] == 2) {
