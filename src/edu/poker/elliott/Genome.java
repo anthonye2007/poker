@@ -1,7 +1,7 @@
 package edu.poker.elliott;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Used by a genetic algorithm to determine which action is best to take at which time.
@@ -9,16 +9,37 @@ import java.util.Map;
  */
 public class Genome {
 
-    private Map<BettingRound, Map<HandStrength, Character>> genome;
+    /**
+     * This must be a TreeMap to preserve the natural ordering in order to print a consistent toString.
+     */
+    private TreeMap<BettingRound, Map<HandStrength, Character>> genome;
 
     public Genome() {
-        genome = new HashMap<>(BettingRound.values().length);
+        genome = new TreeMap<>();
 
         for (BettingRound round : BettingRound.values()) {
-            Map<HandStrength, Character> handToAction = new HashMap<>(HandStrength.values().length);
+            Map<HandStrength, Character> handToAction = new TreeMap<>();
 
             for (HandStrength hand : HandStrength.values()) {
-                handToAction.put(hand, Action.randomAction());
+                char c = Action.randomAction();
+
+                handToAction.put(hand, c);
+            }
+
+            genome.put(round, handToAction);
+        }
+    }
+
+    public Genome(String genomeStr) {
+        genome = new TreeMap<>();
+
+        int i = 0;
+        for (BettingRound round : BettingRound.values()) {
+            Map<HandStrength, Character> handToAction = new TreeMap<>();
+
+            for (HandStrength hand : HandStrength.values()) {
+                handToAction.put(hand, genomeStr.charAt(i));
+                i++;
             }
 
             genome.put(round, handToAction);

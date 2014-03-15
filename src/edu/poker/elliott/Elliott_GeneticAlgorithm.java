@@ -11,15 +11,16 @@ import static java.util.Map.Entry;
  */
 public class Elliott_GeneticAlgorithm {
 
-    public static final int numGenomes = 100;
-
     public static void main(String[] args) {
         new Elliott_GeneticAlgorithm();
     }
 
+    public static final int numGenomes = 100;
+    public static final int minNumGenerations = 100;
+
     public Elliott_GeneticAlgorithm() {
         List<Genome> initialPopulation = randomGenomes(numGenomes);
-        List<Genome> endingPopulation = runGeneration(initialPopulation);
+        List<Genome> endingPopulation = runGeneration(initialPopulation, new ArrayList<Integer>(minNumGenerations));
 
         for (Genome genome : endingPopulation) {
             Elliott player = new Elliott(genome);
@@ -29,7 +30,11 @@ public class Elliott_GeneticAlgorithm {
         }
     }
 
-    private List<Genome> runGeneration(List<Genome> population) {
+    private List<Genome> runGeneration(List<Genome> population, List<Integer> topScores) {
+        if (topScores.size() > minNumGenerations) {
+            return population;
+        }
+
         Map<Genome, Integer> genomes = new HashMap<>(numGenomes);
 
         for (Genome genome : population) {
@@ -42,13 +47,16 @@ public class Elliott_GeneticAlgorithm {
 
         // keep top 5%
         List<Genome> newPopulation = keepElites(sortedGenomes);
+        Genome topGenome = newPopulation.get(0);
+        Integer topScore = genomes.get(topGenome);
+        topScores.add(topScore);
 
         // fill rest of next population with randomly generated genomes
         List<Genome> randoms = randomGenomes((int) (numGenomes * 0.95));
 
         newPopulation.addAll(randoms);
 
-        return runGeneration(newPopulation);
+        return runGeneration(newPopulation, topScores);
     }
 
     private List<Genome> keepElites(Map<Genome, Integer> sortedGenomes) {
