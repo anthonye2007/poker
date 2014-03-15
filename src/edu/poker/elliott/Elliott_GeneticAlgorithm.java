@@ -35,6 +35,9 @@ public class Elliott_GeneticAlgorithm {
             return population;
         }
 
+        int generationNum = topScores.size() + 1;
+        System.out.println("Generation " + generationNum);
+
         Map<Genome, Integer> genomes = new HashMap<>(numGenomes);
 
         for (Genome genome : population) {
@@ -46,17 +49,41 @@ public class Elliott_GeneticAlgorithm {
         Map<Genome, Integer> sortedGenomes = sortGenomesByScore(genomes);
 
         // keep top 5%
-        List<Genome> newPopulation = keepElites(sortedGenomes);
-        Genome topGenome = newPopulation.get(0);
+        List<Genome> elites = keepElites(sortedGenomes);
+        Genome topGenome = elites.get(0);
         Integer topScore = genomes.get(topGenome);
         topScores.add(topScore);
 
-        // fill rest of next population with randomly generated genomes
-        List<Genome> randoms = randomGenomes((int) (numGenomes * 0.95));
+        List<Genome> tweaks = tweakElites(elites);
 
+        // fill rest of next population with randomly generated genomes
+        int numGenomesStillNeeded = numGenomes - elites.size() - tweaks.size();
+        List<Genome> randoms = randomGenomes(numGenomesStillNeeded);
+
+        List<Genome> newPopulation = new ArrayList<>(elites);
+        newPopulation.addAll(tweaks);
         newPopulation.addAll(randoms);
 
         return runGeneration(newPopulation, topScores);
+    }
+
+    private List<Genome> tweakElites(List<Genome> elites) {
+        List<Genome> tweaks = new ArrayList<>();
+        Random rand = new Random();
+
+        for (Genome elite : elites) {
+            // tweak random number of genes
+            for (int i = 0; i < rand.nextInt(3); i++) {
+                int indexToTweak = rand.nextInt(elite.numGenes());
+                char c = Action.randomAction();
+                StringBuilder str = new StringBuilder(elite.toString());
+                str.setCharAt(indexToTweak, c);
+
+                Genome tweaked = new Genome(str.toString());
+                tweaks.add(tweaked);
+            }
+        }
+        return tweaks;
     }
 
     private List<Genome> keepElites(Map<Genome, Integer> sortedGenomes) {
