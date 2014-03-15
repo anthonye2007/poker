@@ -21,10 +21,11 @@ public class Elliott_GeneticAlgorithm {
     public Elliott_GeneticAlgorithm() {
         List<Genome> initialPopulation = randomGenomes(numGenomes);
         runGeneration(initialPopulation, new ArrayList<Integer>(minNumGenerations));
+        System.out.println("\nFinished!");
     }
 
     private List<Genome> runGeneration(List<Genome> population, List<Integer> topScores) {
-        if (topScores.size() > minNumGenerations && notChanging(topScores) ) {
+        if (topScores.size() > minNumGenerations && notChanging(topScores) && topScores.get(0) > 0) {
             return population;
         }
 
