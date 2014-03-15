@@ -6,24 +6,15 @@ package edu.poker.elliott;
  * Created by anthonyelliott on 3/12/14.
  */
 public class Elliott extends Player {
-    /**
-     * Scale of 0 (always fold) to 10 (always raise)
-     */
-    private int aggressiveness;
 
     private Genome genome;
 
     public Elliott() {
-        this.aggressiveness = 5;
-    }
 
-    public Elliott(int aggressiveness) {
-        this.aggressiveness = aggressiveness;
     }
 
     public Elliott(Genome genome) {
         this.genome = genome;
-        this.aggressiveness = 5; // TODO remove
     }
 
 
@@ -67,8 +58,7 @@ public class Elliott extends Player {
             handStrength = HandStrength.BAD;
         }
 
-        String action = determineAction(BettingRound.FIRST, handStrength, data);
-        return action;
+        return determineAction(BettingRound.FIRST, handStrength, data);
     }
 
     private String takeActionSecondRound(TableData data) {
@@ -87,8 +77,7 @@ public class Elliott extends Player {
             handStrength = HandStrength.BAD;
         }
 
-        String action = determineAction(BettingRound.SECOND, handStrength, data);
-        return action;
+        return determineAction(BettingRound.SECOND, handStrength, data);
     }
 
     private String takeActionThirdRound(TableData data) {
@@ -107,8 +96,7 @@ public class Elliott extends Player {
             handStrength = HandStrength.BAD;
         }
 
-        String action = determineAction(BettingRound.THIRD, handStrength, data);
-        return action;
+        return determineAction(BettingRound.THIRD, handStrength, data);
     }
 
     private String takeActionFourthRound(TableData data) {
@@ -127,8 +115,7 @@ public class Elliott extends Player {
             handStrength = HandStrength.BAD;
         }
 
-        String action = determineAction(BettingRound.FOURTH, handStrength, data);
-        return action;
+        return determineAction(BettingRound.FOURTH, handStrength, data);
     }
 
     private String determineAction(BettingRound round, HandStrength handStrength, TableData data) {
