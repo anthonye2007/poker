@@ -52,37 +52,22 @@ public class Elliott extends Player {
 
     private String takeActionFirstRound(TableData data) {
         int[] pocket = data.getPocket();
-        String action = fold();
+        HandStrength handStrength;
 
-        switch (aggressiveness) {
-            case 10: // ultra aggressive
-                if (Elliott_Tools.sameRank(pocket)
-                        || Elliott_Tools.sameSuit(pocket)
-                        || Elliott_Tools.isPossibleStraight(pocket[0], pocket[1])
-                        || Elliott_Tools.hasHighCard(pocket)) {
-                    action = raise(data);
-                }
-                break;
-            case 7:case 8:case 9: // aggressive
-                if (Elliott_Tools.sameRank(pocket) || Elliott_Tools.sameSuit(pocket)) {
-                    action = raise(data);
-                }
-                break;
-            case 4:case 5:case 6: // middle
-                action = stay(data);
-                break;
-            case 1:case 2:case 3: // passive
-                if (Elliott_Tools.sameRank(pocket) && Elliott_Tools.sameSuit(pocket)) {
-                    action = raise(data);
-                }
-                break;
-            case 0: // ultra passive
-                action = fold();
-                break;
-            default:
-                action = stay(data);
+        if (Elliott_Tools.sameRank(pocket) && Elliott_Tools.sameSuit(pocket)) {
+            handStrength = HandStrength.GREAT;
+        } else if (Elliott_Tools.sameRank(pocket)) {
+            handStrength = HandStrength.GOOD;
+        } else if (Elliott_Tools.sameRank(pocket)
+                || Elliott_Tools.sameSuit(pocket)
+                || Elliott_Tools.isPossibleStraight(pocket[0], pocket[1])
+                || Elliott_Tools.hasHighCard(pocket)) {
+            handStrength = HandStrength.OK;
+        } else {
+            handStrength = HandStrength.BAD;
         }
 
+        String action = determineAction(BettingRound.FIRST, handStrength, data);
         return action;
     }
 
@@ -176,6 +161,23 @@ public class Elliott extends Player {
                 break;
             default:
                 action = stay(data);
+        }
+
+        return action;
+    }
+
+    private String determineAction(BettingRound round, HandStrength handStrength, TableData data) {
+        char act = genome.getAction(round, handStrength);
+        String action = null;
+
+        if (act == Action.RAISE) {
+            action = raise(data);
+        } else if (act == Action.STAY) {
+            action = stay(data);
+        } else if (act == Action.FOLD) {
+            action = fold();
+        } else {
+            System.err.println("Bad action: " + act);
         }
 
         return action;
