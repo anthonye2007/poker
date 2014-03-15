@@ -1,6 +1,7 @@
 package edu.poker.elliott;
 
 /**
+ * Runs a genetic algorithm to determine an optimal poker agent.
  * Created by anthonyelliott on 3/12/14.
  */
 public class Elliott_GeneticAlgorithm {
@@ -11,8 +12,9 @@ public class Elliott_GeneticAlgorithm {
     }
 
     private void run() {
-        for (int i = 0; i <= 10; i++) {
-            Elliott player = new Elliott(i);
+        for (int i = 0; i < Genome.numGenes(); i++) {
+            Genome genome = new Genome();
+            Elliott player = new Elliott(genome);
             int score = fitness(player);
             System.out.println("Score for " + i + ": " + score);
         }

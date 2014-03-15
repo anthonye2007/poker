@@ -11,12 +11,19 @@ public class Elliott extends Player {
      */
     private int aggressiveness;
 
+    private Genome genome;
+
     public Elliott() {
         this.aggressiveness = 5;
     }
 
     public Elliott(int aggressiveness) {
         this.aggressiveness = aggressiveness;
+    }
+
+    public Elliott(Genome genome) {
+        this.genome = genome;
+        this.aggressiveness = 5; // TODO remove
     }
 
 
