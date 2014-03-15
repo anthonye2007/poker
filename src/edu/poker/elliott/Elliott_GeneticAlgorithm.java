@@ -20,18 +20,11 @@ public class Elliott_GeneticAlgorithm {
 
     public Elliott_GeneticAlgorithm() {
         List<Genome> initialPopulation = randomGenomes(numGenomes);
-        List<Genome> endingPopulation = runGeneration(initialPopulation, new ArrayList<Integer>(minNumGenerations));
-
-        for (Genome genome : endingPopulation) {
-            Elliott player = new Elliott(genome);
-            int score = fitness(player);
-            System.out.print(score);
-            System.out.println(" " + genome.toString());
-        }
+        runGeneration(initialPopulation, new ArrayList<Integer>(minNumGenerations));
     }
 
     private List<Genome> runGeneration(List<Genome> population, List<Integer> topScores) {
-        if (topScores.size() > minNumGenerations) {
+        if (topScores.size() > minNumGenerations && notChanging(topScores) ) {
             return population;
         }
 
@@ -67,6 +60,18 @@ public class Elliott_GeneticAlgorithm {
         return runGeneration(newPopulation, topScores);
     }
 
+    private boolean notChanging(List<Integer> topScores) {
+        // if last 50 top scores are the same
+        for (int i = 1; i < topScores.size() - 1; i++) {
+            if (!topScores.get(i).equals(topScores.get(i - 1))) {
+                return false;
+            }
+            if (i > 50) break;
+        }
+
+        return true;
+    }
+
     private List<Genome> tweakElites(List<Genome> elites) {
         List<Genome> tweaks = new ArrayList<>();
         Random rand = new Random();
@@ -74,7 +79,7 @@ public class Elliott_GeneticAlgorithm {
         for (Genome elite : elites) {
             // tweak random number of genes
             for (int i = 0; i < rand.nextInt(3); i++) {
-                int indexToTweak = rand.nextInt(elite.numGenes());
+                int indexToTweak = rand.nextInt(Genome.numGenes());
                 char c = Action.randomAction();
                 StringBuilder str = new StringBuilder(elite.toString());
                 str.setCharAt(indexToTweak, c);
