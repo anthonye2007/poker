@@ -75,28 +75,19 @@ public class Elliott extends Player {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
-        String action = fold();
+        HandStrength handStrength;
 
-        switch (aggressiveness) {
-            case 10: // ultra aggressive
-                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
-                break;
-            case 7:case 8:case 9: // aggressive
-                if (score >= Elliott_Tools.THREE_OF_A_KIND) action = raise(data);
-                break;
-            case 4:case 5:case 6: // middle
-                action = stay(data);
-                break;
-            case 1:case 2:case 3: // passive
-                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
-                break;
-            case 0: // ultra passive
-                action = fold();
-                break;
-            default:
-                action = stay(data);
+        if (score >= Elliott_Tools.FULL_HOUSE) {
+            handStrength = HandStrength.GREAT;
+        } else if (score >= Elliott_Tools.THREE_OF_A_KIND) {
+            handStrength = HandStrength.GOOD;
+        } else if (score >= Elliott_Tools.ONE_PAIR) {
+            handStrength = HandStrength.OK;
+        } else {
+            handStrength = HandStrength.BAD;
         }
 
+        String action = determineAction(BettingRound.SECOND, handStrength, data);
         return action;
     }
 
@@ -104,29 +95,19 @@ public class Elliott extends Player {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
+        HandStrength handStrength;
 
-        String action = fold();
-
-        switch (aggressiveness) {
-            case 10: // ultra aggressive
-                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
-                break;
-            case 7:case 8:case 9: // aggressive
-                if (score >= Elliott_Tools.TWO_PAIR) action = raise(data);
-                break;
-            case 4:case 5:case 6: // middle
-                action = stay(data);
-                break;
-            case 1:case 2:case 3: // passive
-                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
-                break;
-            case 0: // ultra passive
-                action = fold();
-                break;
-            default:
-                action = stay(data);
+        if (score >= Elliott_Tools.FULL_HOUSE) {
+            handStrength = HandStrength.GREAT;
+        } else if (score >= Elliott_Tools.TWO_PAIR) {
+            handStrength = HandStrength.GOOD;
+        } else if (score >= Elliott_Tools.ONE_PAIR) {
+            handStrength = HandStrength.OK;
+        } else {
+            handStrength = HandStrength.BAD;
         }
 
+        String action = determineAction(BettingRound.THIRD, handStrength, data);
         return action;
     }
 
@@ -134,35 +115,19 @@ public class Elliott extends Player {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
-        int scoreFromBoard = Elliott_Tools.getPointsOfHand(board);
+        HandStrength handStrength;
 
-        // ensure my pocket cards are actually worthwhile
-        if (score <= scoreFromBoard) {
-            return fold();
+        if (score >= Elliott_Tools.FULL_HOUSE) {
+            handStrength = HandStrength.GREAT;
+        } else if (score >= Elliott_Tools.TWO_PAIR) {
+            handStrength = HandStrength.GOOD;
+        } else if (score >= Elliott_Tools.ONE_PAIR) {
+            handStrength = HandStrength.OK;
+        } else {
+            handStrength = HandStrength.BAD;
         }
 
-        String action = fold();
-
-        switch (aggressiveness) {
-            case 10: // ultra aggressive
-                if (score >= Elliott_Tools.ONE_PAIR) action = raise(data);
-                break;
-            case 7:case 8:case 9: // aggressive
-                if (score >= Elliott_Tools.TWO_PAIR) action = raise(data);
-                break;
-            case 4:case 5:case 6: // middle
-                action = stay(data);
-                break;
-            case 1:case 2:case 3: // passive
-                if (score >= Elliott_Tools.FULL_HOUSE) action = raise(data);
-                break;
-            case 0: // ultra passive
-                action = fold();
-                break;
-            default:
-                action = stay(data);
-        }
-
+        String action = determineAction(BettingRound.FOURTH, handStrength, data);
         return action;
     }
 
