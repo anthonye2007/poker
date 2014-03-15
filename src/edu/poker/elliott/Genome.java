@@ -33,4 +33,18 @@ public class Genome {
         return BettingRound.values().length * HandStrength.values().length * Action.numActions();
     }
 
+    public String toString() {
+        char[] chars = new char[numGenes()];
+
+        int i = 0;
+        for (Map.Entry<BettingRound, Map<HandStrength, Character>> round : genome.entrySet()) {
+            for (Map.Entry<HandStrength, Character> hand : round.getValue().entrySet()) {
+                chars[i] = hand.getValue();
+                i++;
+            }
+        }
+
+        return new String(chars);
+    }
+
 }
