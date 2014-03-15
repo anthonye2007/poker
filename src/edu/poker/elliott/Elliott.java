@@ -1,16 +1,38 @@
 package edu.poker.elliott;
 
 /**
- * This class can be run in a genetic algorithm to determine the 'optimal' strategy.
+ * I used a genetic algorithm to determine which action should be taken at each decision point.
+ * This agent uses a combination of the relative hand strength and current betting round
+ * to choose from a set of possible actions (raise, stay, or fold).  The agent is set up using a 'genome'
+ * which instructs the agent which action to take when. This genome can be represented by a simple string
+ * of a set of three characters: 'r' for raise, 's' for stay, and 'f' for fold.
+ * Currently the genome contains four rounds with four possible hand strengths for a total of 16 genes.
+ * Actually, I developed a model in code first and then used a String for easier mutations and readability.
  *
- * Created by anthonyelliott on 3/12/14.
+ * The algorithm begins with a population of 100 randomly generated genomes. These genomes are then scored based on
+ * their performance in a tournament where the genome is the sixth player against five other players (these
+ * players always remain constant to provide a consistent fitness function).  The algorithm uses elitism
+ * to automatically pass the top 5% of the genomes into the next generation.  Also, the algorithm randomly picks about
+ * 20% of the genomes and randomly picks a few genes to mutate. These new genomes are passed on to the next generation.
+ * The algorithm also uses a crossover reproductive strategy in which two genomes combine their genes to create
+ * a new genome. About 50% of the next generation is formed from this reproductive manner.
+ *
+ * After mutations, the algorithm removes any duplicate genomes that it finds.  Finally the algorithm
+ * randomly generates as many genomes as needed to ensure the next generation's population size is 100 genomes.
+ * Once this is all done, the algorithm passes this new generation into itself and begins again with another
+ * generation.
+ *
+ * Each generation takes about 10 seconds to run when the population size is 100. I ran several thousand generations
+ * and the algorithm produced 'rrrsssrssrrsrrrs' as the final genome.  This genome had a score of 1737 in the
+ * tournament against five of the agents from the previous submission (Advanced Rules Agent).
  */
 public class Elliott extends Player {
 
     private Genome genome;
 
     public Elliott() {
-
+        // Genome determined via genetic algorithm
+        this.genome = new Genome("rrrsssrssrrsrrrs");
     }
 
     public Elliott(Genome genome) {
