@@ -50,23 +50,30 @@ public class Elliott_GeneticAlgorithm {
         Integer topScore = genomes.get(topGenome);
         topScores.add(topScore);
 
-        // tweak 20%
-        List<Genome> tweaks = tweakElites(elites);
+        List<Genome> toTweak = getPopulationToTweak(genomes.keySet(), 20);
+        List<Genome> tweaks = tweakGenomes(toTweak);
 
-        // about 50%
-        List<Genome> crossovers = crossoverAll(genomes.keySet());
+        List<Genome> crossovers = crossoverGenomes(genomes.keySet(), 50);
 
         List<Genome> possibleDuplicates = new ArrayList<>(elites);
         possibleDuplicates.addAll(tweaks);
         possibleDuplicates.addAll(crossovers);
         List<Genome> newPopulation = removeDuplicates(possibleDuplicates);
 
-        // fill rest of next population with randomly generated genomes
         int numGenomesStillNeeded = numGenomes - newPopulation.size();
         List<Genome> randoms = randomGenomes(numGenomesStillNeeded);
         newPopulation.addAll(randoms);
 
         return runGeneration(newPopulation, topScores);
+    }
+
+    private List<Genome> getPopulationToTweak(Set<Genome> genomes, int percentageToTweak) {
+        List<Genome> toTweak = new ArrayList<>();
+        for(Genome genome : genomes) {
+            if (shouldAdd(percentageToTweak))
+                toTweak.add(genome);
+        }
+        return toTweak;
     }
 
     private List<Genome> removeDuplicates(List<Genome> newPopulation) {
@@ -91,22 +98,23 @@ public class Elliott_GeneticAlgorithm {
     }
 
     /**
-     * Returns true 50% of the time.
+     * Returns true a certain percentage of the time.
      */
-    private boolean shouldAdd() {
+    private boolean shouldAdd(int percentage) {
         Random rand = new Random();
-        int num = rand.nextInt(2);
+        int max = 100;
+        int num = rand.nextInt(max - percentage + 1);
 
-        return num == 1;
+        return num == 0;
     }
 
 
-    private List<Genome> crossoverAll(Set<Genome> genomes) {
+    private List<Genome> crossoverGenomes(Set<Genome> genomes, int percentageToCross) {
         List<Genome> crossedGenomes = new ArrayList<>(genomes.size());
 
         List<Genome> toCross = new ArrayList<>();
         for(Genome genome : genomes) {
-            if (shouldAdd())
+            if (shouldAdd(percentageToCross))
                 toCross.add(genome);
         }
 
@@ -150,12 +158,12 @@ public class Elliott_GeneticAlgorithm {
         return true;
     }
 
-    private List<Genome> tweakElites(List<Genome> elites) {
+    private List<Genome> tweakGenomes(List<Genome> elites) {
         List<Genome> tweaks = new ArrayList<>();
         Random rand = new Random();
 
         for (Genome elite : elites) {
-            // tweak random number of genes
+            // tweak small number of genes
             for (int i = 0; i < rand.nextInt(3); i++) {
                 int indexToTweak = rand.nextInt(Genome.numGenes());
                 char c = Action.randomAction();
