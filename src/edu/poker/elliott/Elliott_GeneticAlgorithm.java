@@ -34,6 +34,20 @@ public class Elliott_GeneticAlgorithm {
         for (Entry<Genome, Integer> entry : sortedGenomes.entrySet()) {
             System.out.println(entry.getValue());
         }
+
+        System.out.println("Sorted!\n");
+
+        // keep top 5%
+        List<Genome> elites = new LinkedList<>();
+        int i = 0;
+        Iterator<Entry<Genome, Integer>> iter = sortedGenomes.entrySet().iterator();
+
+        while(iter.hasNext() && i < numGenomes / 20) {
+            Entry<Genome, Integer> entry = iter.next();
+            elites.add(entry.getKey());
+            System.out.println(entry.getValue());
+            i++;
+        }
     }
 
     private List<Genome> initializePopulation() {
@@ -56,11 +70,11 @@ public class Elliott_GeneticAlgorithm {
 
         List<Entry<Genome, Integer>> list = new LinkedList<>(unsortedMap.entrySet());
 
-        // sort list based on comparator
+        // descending order
         Collections.sort(list, new Comparator() {
             public int compare(Object o1, Object o2) {
-                return ((Comparable) ((Entry) (o1)).getValue())
-                        .compareTo(((Entry) (o2)).getValue());
+                return ((Comparable) ((Entry) (o2)).getValue())
+                        .compareTo(((Entry) (o1)).getValue());
             }
         });
 

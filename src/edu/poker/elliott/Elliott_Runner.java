@@ -6,12 +6,12 @@ import java.util.Map.Entry;
 public class Elliott_Runner {
 
     public static void main(String[] args) {
-        for (int i = 0; i <= 10; i++) {
+        /*for (int i = 0; i <= 10; i++) {
             Elliott me = new Elliott(i);
             Elliott_Runner runner = new Elliott_Runner(me);
             int score = runner.play();
             System.out.println("Score for " + i + ": " + score);
-        }
+        }*/
     }
 	
 	private Player[] players;
