@@ -19,12 +19,12 @@ public class Elliott_GeneticAlgorithm {
     public static final int minNumGenerations = 100;
 
     public Elliott_GeneticAlgorithm() {
-        List<Genome> initialPopulation = randomGenomes(numGenomes);
+        List<Elliott_Genome> initialPopulation = randomGenomes(numGenomes);
         runGeneration(initialPopulation, new ArrayList<Integer>(minNumGenerations));
         System.out.println("\nFinished!");
     }
 
-    private List<Genome> runGeneration(List<Genome> population, List<Integer> topScores) {
+    private List<Elliott_Genome> runGeneration(List<Elliott_Genome> population, List<Integer> topScores) {
         if (topScores.size() > minNumGenerations && notChanging(topScores) && topScores.get(0) > 0) {
             return population;
         }
@@ -32,55 +32,55 @@ public class Elliott_GeneticAlgorithm {
         int generationNum = topScores.size() + 1;
         System.out.println("Generation " + generationNum);
 
-        Map<Genome, Integer> genomes = new HashMap<>(numGenomes);
+        Map<Elliott_Genome, Integer> genomes = new HashMap<>(numGenomes);
 
-        for (Genome genome : population) {
+        for (Elliott_Genome genome : population) {
             Elliott player = new Elliott(genome);
             int score = fitness(player);
             genomes.put(genome, score);
         }
 
-        Map<Genome, Integer> sortedGenomes = sortGenomesByScore(genomes);
+        Map<Elliott_Genome, Integer> sortedGenomes = sortGenomesByScore(genomes);
 
         // keep top 5%
-        List<Genome> elites = keepElites(sortedGenomes);
+        List<Elliott_Genome> elites = keepElites(sortedGenomes);
 
         // keep top score
-        Genome topGenome = elites.get(0);
+        Elliott_Genome topGenome = elites.get(0);
         Integer topScore = genomes.get(topGenome);
         topScores.add(topScore);
 
-        List<Genome> toTweak = getPopulationToTweak(genomes.keySet(), 20);
-        List<Genome> tweaks = tweakGenomes(toTweak);
+        List<Elliott_Genome> toTweak = getPopulationToTweak(genomes.keySet(), 20);
+        List<Elliott_Genome> tweaks = tweakGenomes(toTweak);
 
-        List<Genome> crossovers = crossoverGenomes(genomes.keySet(), 50);
+        List<Elliott_Genome> crossovers = crossoverGenomes(genomes.keySet(), 50);
 
-        List<Genome> possibleDuplicates = new ArrayList<>(elites);
+        List<Elliott_Genome> possibleDuplicates = new ArrayList<>(elites);
         possibleDuplicates.addAll(tweaks);
         possibleDuplicates.addAll(crossovers);
-        List<Genome> newPopulation = removeDuplicates(possibleDuplicates);
+        List<Elliott_Genome> newPopulation = removeDuplicates(possibleDuplicates);
 
         int numGenomesStillNeeded = numGenomes - newPopulation.size();
-        List<Genome> randoms = randomGenomes(numGenomesStillNeeded);
+        List<Elliott_Genome> randoms = randomGenomes(numGenomesStillNeeded);
         newPopulation.addAll(randoms);
 
         return runGeneration(newPopulation, topScores);
     }
 
-    private List<Genome> getPopulationToTweak(Set<Genome> genomes, int percentageToTweak) {
-        List<Genome> toTweak = new ArrayList<>();
-        for(Genome genome : genomes) {
+    private List<Elliott_Genome> getPopulationToTweak(Set<Elliott_Genome> genomes, int percentageToTweak) {
+        List<Elliott_Genome> toTweak = new ArrayList<>();
+        for(Elliott_Genome genome : genomes) {
             if (shouldAdd(percentageToTweak))
                 toTweak.add(genome);
         }
         return toTweak;
     }
 
-    private List<Genome> removeDuplicates(List<Genome> newPopulation) {
-        List<Genome> toAdd = new ArrayList<>();
+    private List<Elliott_Genome> removeDuplicates(List<Elliott_Genome> newPopulation) {
+        List<Elliott_Genome> toAdd = new ArrayList<>();
 
         while (newPopulation.size() > 0) {
-            Genome genome = newPopulation.remove(0);
+            Elliott_Genome genome = newPopulation.remove(0);
             if (!isDuplicate(newPopulation, genome)) {
                 toAdd.add(genome);
             }
@@ -89,8 +89,8 @@ public class Elliott_GeneticAlgorithm {
         return toAdd;
     }
 
-    private boolean isDuplicate(List<Genome> list, Genome genome) {
-        for(Genome possibleDuplicate : list) {
+    private boolean isDuplicate(List<Elliott_Genome> list, Elliott_Genome genome) {
+        for(Elliott_Genome possibleDuplicate : list) {
             if (genome.equals(possibleDuplicate))
                 return true;
         }
@@ -109,11 +109,11 @@ public class Elliott_GeneticAlgorithm {
     }
 
 
-    private List<Genome> crossoverGenomes(Set<Genome> genomes, int percentageToCross) {
-        List<Genome> crossedGenomes = new ArrayList<>(genomes.size());
+    private List<Elliott_Genome> crossoverGenomes(Set<Elliott_Genome> genomes, int percentageToCross) {
+        List<Elliott_Genome> crossedGenomes = new ArrayList<>(genomes.size());
 
-        List<Genome> toCross = new ArrayList<>();
-        for(Genome genome : genomes) {
+        List<Elliott_Genome> toCross = new ArrayList<>();
+        for(Elliott_Genome genome : genomes) {
             if (shouldAdd(percentageToCross))
                 toCross.add(genome);
         }
@@ -122,17 +122,17 @@ public class Elliott_GeneticAlgorithm {
 
         while (toCross.size() > 2) {
             // cross two random genomes
-            Genome first = toCross.remove(rand.nextInt(toCross.size()));
-            Genome second = toCross.remove(rand.nextInt(toCross.size()));
+            Elliott_Genome first = toCross.remove(rand.nextInt(toCross.size()));
+            Elliott_Genome second = toCross.remove(rand.nextInt(toCross.size()));
 
-            Genome crossed = cross(first, second);
+            Elliott_Genome crossed = cross(first, second);
             crossedGenomes.add(crossed);
         }
 
         return crossedGenomes;
     }
 
-    private Genome cross(Genome first, Genome second) {
+    private Elliott_Genome cross(Elliott_Genome first, Elliott_Genome second) {
         String firstStr = first.toString();
         int minLength = 2;
 
@@ -143,7 +143,7 @@ public class Elliott_GeneticAlgorithm {
 
         String crossedGenome = subFirst + subSecond;
 
-        return new Genome(crossedGenome);
+        return new Elliott_Genome(crossedGenome);
     }
 
     private boolean notChanging(List<Integer> topScores) {
@@ -158,32 +158,32 @@ public class Elliott_GeneticAlgorithm {
         return true;
     }
 
-    private List<Genome> tweakGenomes(List<Genome> elites) {
-        List<Genome> tweaks = new ArrayList<>();
+    private List<Elliott_Genome> tweakGenomes(List<Elliott_Genome> elites) {
+        List<Elliott_Genome> tweaks = new ArrayList<>();
         Random rand = new Random();
 
-        for (Genome elite : elites) {
+        for (Elliott_Genome elite : elites) {
             // tweak small number of genes
             for (int i = 0; i < rand.nextInt(3); i++) {
-                int indexToTweak = rand.nextInt(Genome.numGenes());
+                int indexToTweak = rand.nextInt(Elliott_Genome.numGenes());
                 char c = Action.randomAction();
                 StringBuilder str = new StringBuilder(elite.toString());
                 str.setCharAt(indexToTweak, c);
 
-                Genome tweaked = new Genome(str.toString());
+                Elliott_Genome tweaked = new Elliott_Genome(str.toString());
                 tweaks.add(tweaked);
             }
         }
         return tweaks;
     }
 
-    private List<Genome> keepElites(Map<Genome, Integer> sortedGenomes) {
-        List<Genome> elites = new LinkedList<>();
+    private List<Elliott_Genome> keepElites(Map<Elliott_Genome, Integer> sortedGenomes) {
+        List<Elliott_Genome> elites = new LinkedList<>();
         int i = 0;
-        Iterator<Entry<Genome, Integer>> iter = sortedGenomes.entrySet().iterator();
+        Iterator<Entry<Elliott_Genome, Integer>> iter = sortedGenomes.entrySet().iterator();
 
         while(iter.hasNext() && i < numGenomes / 20) {
-            Entry<Genome, Integer> entry = iter.next();
+            Entry<Elliott_Genome, Integer> entry = iter.next();
             elites.add(entry.getKey());
             System.out.print(entry.getValue());
             System.out.println(" " + entry.getKey().toString());
@@ -195,11 +195,11 @@ public class Elliott_GeneticAlgorithm {
         return elites;
     }
 
-    private List<Genome> randomGenomes(int numRandom) {
-        List<Genome> genomes = new LinkedList<>();
+    private List<Elliott_Genome> randomGenomes(int numRandom) {
+        List<Elliott_Genome> genomes = new LinkedList<>();
 
         for (int i = 0; i < numRandom; i++) {
-            Genome genome = new Genome();
+            Elliott_Genome genome = new Elliott_Genome();
             try {
                 sleep(10);
             } catch (InterruptedException e) {
@@ -211,9 +211,9 @@ public class Elliott_GeneticAlgorithm {
         return genomes;
     }
 
-    private Map<Genome, Integer> sortGenomesByScore(Map<Genome, Integer> unsortedMap) {
+    private Map<Elliott_Genome, Integer> sortGenomesByScore(Map<Elliott_Genome, Integer> unsortedMap) {
 
-        List<Entry<Genome, Integer>> list = new LinkedList<>(unsortedMap.entrySet());
+        List<Entry<Elliott_Genome, Integer>> list = new LinkedList<>(unsortedMap.entrySet());
 
         // descending order
         Collections.sort(list, new Comparator() {
@@ -225,8 +225,8 @@ public class Elliott_GeneticAlgorithm {
 
         // put sorted list into map again
         //LinkedHashMap make sure order in which keys were inserted
-        Map<Genome, Integer> sortedMap = new LinkedHashMap<>();
-        for (Entry<Genome, Integer> entry : list) {
+        Map<Elliott_Genome, Integer> sortedMap = new LinkedHashMap<>();
+        for (Entry<Elliott_Genome, Integer> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;

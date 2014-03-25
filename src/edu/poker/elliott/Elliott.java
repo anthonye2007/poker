@@ -28,14 +28,14 @@ package edu.poker.elliott;
  */
 public class Elliott extends Player {
 
-    private Genome genome;
+    private Elliott_Genome genome;
 
     public Elliott() {
         // Genome determined via genetic algorithm
-        this.genome = new Genome("rrrsssrssrrsrrrs");
+        this.genome = new Elliott_Genome("rrrsssrssrrsrrrs");
     }
 
-    public Elliott(Genome genome) {
+    public Elliott(Elliott_Genome genome) {
         this.genome = genome;
     }
 
@@ -65,82 +65,82 @@ public class Elliott extends Player {
 
     private String takeActionFirstRound(TableData data) {
         int[] pocket = data.getPocket();
-        HandStrength handStrength;
+        Elliott_HandStrength handStrength;
 
         if (Elliott_Tools.sameRank(pocket) && Elliott_Tools.sameSuit(pocket)) {
-            handStrength = HandStrength.GREAT;
+            handStrength = Elliott_HandStrength.GREAT;
         } else if (Elliott_Tools.sameRank(pocket)) {
-            handStrength = HandStrength.GOOD;
+            handStrength = Elliott_HandStrength.GOOD;
         } else if (Elliott_Tools.sameRank(pocket)
                 || Elliott_Tools.sameSuit(pocket)
                 || Elliott_Tools.isPossibleStraight(pocket[0], pocket[1])
                 || Elliott_Tools.hasHighCard(pocket)) {
-            handStrength = HandStrength.OK;
+            handStrength = Elliott_HandStrength.OK;
         } else {
-            handStrength = HandStrength.BAD;
+            handStrength = Elliott_HandStrength.BAD;
         }
 
-        return determineAction(BettingRound.FIRST, handStrength, data);
+        return determineAction(Elliott_BettingRound.FIRST, handStrength, data);
     }
 
     private String takeActionSecondRound(TableData data) {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
-        HandStrength handStrength;
+        Elliott_HandStrength handStrength;
 
         if (score >= Elliott_Tools.FULL_HOUSE) {
-            handStrength = HandStrength.GREAT;
+            handStrength = Elliott_HandStrength.GREAT;
         } else if (score >= Elliott_Tools.THREE_OF_A_KIND) {
-            handStrength = HandStrength.GOOD;
+            handStrength = Elliott_HandStrength.GOOD;
         } else if (score >= Elliott_Tools.ONE_PAIR) {
-            handStrength = HandStrength.OK;
+            handStrength = Elliott_HandStrength.OK;
         } else {
-            handStrength = HandStrength.BAD;
+            handStrength = Elliott_HandStrength.BAD;
         }
 
-        return determineAction(BettingRound.SECOND, handStrength, data);
+        return determineAction(Elliott_BettingRound.SECOND, handStrength, data);
     }
 
     private String takeActionThirdRound(TableData data) {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
-        HandStrength handStrength;
+        Elliott_HandStrength handStrength;
 
         if (score >= Elliott_Tools.FULL_HOUSE) {
-            handStrength = HandStrength.GREAT;
+            handStrength = Elliott_HandStrength.GREAT;
         } else if (score >= Elliott_Tools.TWO_PAIR) {
-            handStrength = HandStrength.GOOD;
+            handStrength = Elliott_HandStrength.GOOD;
         } else if (score >= Elliott_Tools.ONE_PAIR) {
-            handStrength = HandStrength.OK;
+            handStrength = Elliott_HandStrength.OK;
         } else {
-            handStrength = HandStrength.BAD;
+            handStrength = Elliott_HandStrength.BAD;
         }
 
-        return determineAction(BettingRound.THIRD, handStrength, data);
+        return determineAction(Elliott_BettingRound.THIRD, handStrength, data);
     }
 
     private String takeActionFourthRound(TableData data) {
         int[] pocket = data.getPocket();
         int[] board = data.getBoard();
         int score = Elliott_Tools.getPointsOfHand(pocket, board);
-        HandStrength handStrength;
+        Elliott_HandStrength handStrength;
 
         if (score >= Elliott_Tools.FULL_HOUSE) {
-            handStrength = HandStrength.GREAT;
+            handStrength = Elliott_HandStrength.GREAT;
         } else if (score >= Elliott_Tools.TWO_PAIR) {
-            handStrength = HandStrength.GOOD;
+            handStrength = Elliott_HandStrength.GOOD;
         } else if (score >= Elliott_Tools.ONE_PAIR) {
-            handStrength = HandStrength.OK;
+            handStrength = Elliott_HandStrength.OK;
         } else {
-            handStrength = HandStrength.BAD;
+            handStrength = Elliott_HandStrength.BAD;
         }
 
-        return determineAction(BettingRound.FOURTH, handStrength, data);
+        return determineAction(Elliott_BettingRound.FOURTH, handStrength, data);
     }
 
-    private String determineAction(BettingRound round, HandStrength handStrength, TableData data) {
+    private String determineAction(Elliott_BettingRound round, Elliott_HandStrength handStrength, TableData data) {
         char act = genome.getAction(round, handStrength);
         String action = null;
 

@@ -7,20 +7,20 @@ import java.util.TreeMap;
  * Used by a genetic algorithm to determine which action is best to take at which time.
  * Genome currently allows for two factors: round of betting and relative hand strength.
  */
-public class Genome {
+public class Elliott_Genome {
 
     /**
      * This must be a TreeMap to preserve the natural ordering in order to print a consistent toString.
      */
-    private TreeMap<BettingRound, Map<HandStrength, Character>> genome;
+    private TreeMap<Elliott_BettingRound, Map<Elliott_HandStrength, Character>> genome;
 
-    public Genome() {
+    public Elliott_Genome() {
         genome = new TreeMap<>();
 
-        for (BettingRound round : BettingRound.values()) {
-            Map<HandStrength, Character> handToAction = new TreeMap<>();
+        for (Elliott_BettingRound round : Elliott_BettingRound.values()) {
+            Map<Elliott_HandStrength, Character> handToAction = new TreeMap<>();
 
-            for (HandStrength hand : HandStrength.values()) {
+            for (Elliott_HandStrength hand : Elliott_HandStrength.values()) {
                 char c = Action.randomAction();
 
                 handToAction.put(hand, c);
@@ -30,14 +30,14 @@ public class Genome {
         }
     }
 
-    public Genome(String genomeStr) {
+    public Elliott_Genome(String genomeStr) {
         genome = new TreeMap<>();
 
         int i = 0;
-        for (BettingRound round : BettingRound.values()) {
-            Map<HandStrength, Character> handToAction = new TreeMap<>();
+        for (Elliott_BettingRound round : Elliott_BettingRound.values()) {
+            Map<Elliott_HandStrength, Character> handToAction = new TreeMap<>();
 
-            for (HandStrength hand : HandStrength.values()) {
+            for (Elliott_HandStrength hand : Elliott_HandStrength.values()) {
                 handToAction.put(hand, genomeStr.charAt(i));
                 i++;
             }
@@ -46,20 +46,20 @@ public class Genome {
         }
     }
 
-    public Character getAction(BettingRound round, HandStrength hand) {
+    public Character getAction(Elliott_BettingRound round, Elliott_HandStrength hand) {
         return genome.get(round).get(hand);
     }
 
     public static int numGenes() {
-        return BettingRound.values().length * HandStrength.values().length * Action.numActions();
+        return Elliott_BettingRound.values().length * Elliott_HandStrength.values().length * Action.numActions();
     }
 
     public String toString() {
         char[] chars = new char[numGenes()];
 
         int i = 0;
-        for (Map.Entry<BettingRound, Map<HandStrength, Character>> round : genome.entrySet()) {
-            for (Map.Entry<HandStrength, Character> hand : round.getValue().entrySet()) {
+        for (Map.Entry<Elliott_BettingRound, Map<Elliott_HandStrength, Character>> round : genome.entrySet()) {
+            for (Map.Entry<Elliott_HandStrength, Character> hand : round.getValue().entrySet()) {
                 chars[i] = hand.getValue();
                 i++;
             }
@@ -68,7 +68,7 @@ public class Genome {
         return new String(chars);
     }
 
-    public boolean equals(Genome other) {
+    public boolean equals(Elliott_Genome other) {
         return toString().equals(other.toString());
     }
 
