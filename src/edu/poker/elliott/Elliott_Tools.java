@@ -38,7 +38,7 @@ public class Elliott_Tools {
     }
 
     public static double probOfTwoPair(int[] pocket, int[] board) {
-        if (EstherTools.containsOnePair(pocket, board)) {
+        if (EstherTools.containsTwoPair(pocket, board)) {
             return 1.0;
         }
 
