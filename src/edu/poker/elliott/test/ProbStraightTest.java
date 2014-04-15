@@ -11,6 +11,32 @@ import static org.junit.Assert.assertEquals;
 public class ProbStraightTest {
 
     @Test
+    public void testOneDifferentSuit() {
+        int[] pocket = {0, 14};
+        int[] board = {15, 16, 18, 19};
+        double probability = Elliott_Tools.probOfStraight(pocket, board);
+
+        int possibleWaysToGetAFour = 4;
+        int remainingCardsInDeck = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+        double expectedProb = possibleWaysToGetAFour / (double) remainingCardsInDeck;
+        //System.out.println("Prob of one unseen rank with four cards on board: " + expectedProb);
+        assertEquals(expectedProb, probability, 0.001);
+    }
+
+    @Test
+    public void testManyDifferentSuits() {
+        int[] pocket = {0, 14};
+        int[] board = {28, 16, 31, 45};
+        double probability = Elliott_Tools.probOfStraight(pocket, board);
+
+        int possibleWaysToGetAFour = 4;
+        int remainingCardsInDeck = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+        double expectedProb = possibleWaysToGetAFour / (double) remainingCardsInDeck;
+        //System.out.println("Prob of one unseen rank with four cards on board: " + expectedProb);
+        assertEquals(expectedProb, probability, 0.001);
+    }
+
+    @Test
     public void testHaveFourLowCards() {
         int[] pocket = {0, 1};
         int[] board = {2, 3, 5, 6};
