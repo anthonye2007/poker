@@ -13,8 +13,11 @@ public class Elliott_Tools {
 	public static final int STRAIGHT_FLUSH = 9;
 	
 	public static final int CARDS_PER_HAND = 5;
-	
-	public static int getPointsOfHand(int[] pocket, int[] board) {
+
+    public static int HIGH_THRESHOLD = 10;
+    public static int LOW_THRESHOLD = 5;
+
+    public static int getPointsOfHand(int[] pocket, int[] board) {
 		return getPointsOfHand(concat(pocket, board));
 	}
 	
@@ -94,5 +97,16 @@ public class Elliott_Tools {
         }
 
         return retVal;
+    }
+
+    public static boolean isHighCard(int card) {
+        return getRank(card) >= HIGH_THRESHOLD;
+    }
+
+    public static boolean isHighPair(int[] pocket) {
+        boolean isPair = sameRank(pocket);
+        boolean isHigh = isHighCard(pocket[0]);
+
+        return isPair && isHigh;
     }
 }
