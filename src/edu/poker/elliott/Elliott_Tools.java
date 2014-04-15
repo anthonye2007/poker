@@ -130,9 +130,8 @@ public class Elliott_Tools {
         addCloseCards(board, first, closeToFirst);
         addCloseCards(board, second, closeToSecond);
 
-        int numCardsSeen = pocket.length + board.length;
-        double probFirst = findProbOfStraight(closeToFirst, numCardsSeen);
-        double probSecond = findProbOfStraight(closeToSecond, numCardsSeen);
+        double probFirst = findProbOfStraight(closeToFirst, board.length);
+        double probSecond = findProbOfStraight(closeToSecond, board.length);
 
         return maxProb(probFirst, probSecond);
     }
@@ -155,13 +154,13 @@ public class Elliott_Tools {
         return probFirst >= probSecond ? probFirst : probSecond;
     }
 
-    private static double findProbOfStraight(List<Integer> cards, int numCardsSeen) {
-        if (numCardsSeen >= CARDS_PER_HAND + CARDS_IN_POCKET) {
+    private static double findProbOfStraight(List<Integer> cards, int numCardsOnBoard) {
+        if (numCardsOnBoard >= CARDS_PER_HAND) {
             return doFindProbOfStraight(cards);
         } else if (cards.size() == CARDS_PER_HAND - 1) {
             List<Integer> possibleSuccesses = determinePossibleSuccesses(cards);
             List<Integer> actualSuccesses = determineActualSuccesses(cards, possibleSuccesses);
-            Map<Integer, Double> probForCard = calculateProbForEachSuccess(cards, actualSuccesses, numCardsSeen);
+            Map<Integer, Double> probForCard = calculateProbForEachSuccess(cards, actualSuccesses, numCardsOnBoard);
 
             return calculateTotalProbForStraight(probForCard);
         } else {
@@ -178,7 +177,8 @@ public class Elliott_Tools {
         return totalProb;
     }
 
-    private static Map<Integer, Double> calculateProbForEachSuccess(List<Integer> cards, List<Integer> actualSuccesses, int numCardsSeen) {
+    private static Map<Integer, Double> calculateProbForEachSuccess(List<Integer> cards, List<Integer> actualSuccesses,
+                                                                    int numCardsOnBoard) {
         Map<Integer, Double> probForCard = new TreeMap<>();
         for (Integer success : actualSuccesses) {
             int numAlreadySeenOfThisRank = 0;
@@ -190,7 +190,7 @@ public class Elliott_Tools {
 
             int numTotalCardsOfThisRank = 4;
             int numCardsOfThisRankNotSeen = numTotalCardsOfThisRank - numAlreadySeenOfThisRank;
-            int numRemainingCards = CARDS_IN_DECK - numCardsSeen;
+            int numRemainingCards = CARDS_IN_DECK - numCardsOnBoard - CARDS_IN_POCKET;
 
             double probability = numCardsOfThisRankNotSeen / (double) numRemainingCards;
             assert(probability >= 0.0 && probability <= 1.0);
