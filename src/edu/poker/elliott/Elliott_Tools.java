@@ -113,40 +113,6 @@ public class Elliott_Tools {
         return isPair && isHigh;
     }
 
-    /*public static double probOfStraightGivenFourCardsInBoard(int[] pocket, int[] board) {
-        assert(board.length == 4);
-        assert(pocket.length == 2);
-
-        int first = pocket[0];
-        int second = pocket[1];
-
-        List<Integer> closeToFirst = new ArrayList<>();
-        List<Integer> closeToSecond = new ArrayList<>();
-
-        closeToFirst.add(first);
-        closeToSecond.add(second);
-
-        if (areClose(first, second)) {
-            closeToFirst.add(second);
-            closeToSecond.add(first);
-        }
-
-        addCloseCards(board, first, closeToFirst);
-        addCloseCards(board, second, closeToSecond);
-
-        if (isPotentialStraight(closeToFirst) && isPotentialStraight(closeToSecond) && !closeToFirst.equals(closeToSecond)) {
-            // only need one more card for which there are four suits and 46 cards to choose from
-            return 2.0 * 4.0 / 46.0;
-        }
-
-        if (isPotentialStraight(closeToFirst) || isPotentialStraight(closeToSecond)) {
-            // only need one more card for which there are four suits and 46 cards to choose from
-            return 4.0 / 46.0;
-        }
-
-        return 0.0;
-    }*/
-
     private static boolean isPotentialStraight(List<Integer> cardsNearPocket) {
         List<Integer> potentialStraight = new ArrayList<>();
         for (Integer item : cardsNearPocket) {
@@ -261,29 +227,12 @@ public class Elliott_Tools {
     }
 
     private static double isPotentialStraightFourCards(int[] pocket, int[] board) {
-        int first = pocket[0];
-        int second = pocket[1];
-
-        List<Integer> closeToFirst = new ArrayList<>();
-        List<Integer> closeToSecond = new ArrayList<>();
-
-        closeToFirst.add(first);
-        closeToSecond.add(second);
-
-        addPocketCardsIfClose(first, second, closeToFirst);
-
-        addCloseCards(board, first, closeToFirst);
-        addCloseCards(board, second, closeToSecond);
+        List<Integer> closeToFirst = makeListOfPotentialCardsFromFirstPocketCard(pocket, board);
+        List<Integer> closeToSecond = makeListOfPotentialCardsFromSecondPocketCard(pocket, board);
 
         double probFirst = findProbOfStraight(closeToFirst, board.length);
         double probSecond = findProbOfStraight(closeToSecond, board.length);
         return maxProb(probFirst, probSecond);
-    }
-
-    private static void addPocketCardsIfClose(int first, int second, List<Integer> list) {
-        if (areClose(first, second)) {
-            list.add(second);
-        }
     }
 
     private static void addCloseCards(int[] board, int first, List<Integer> list) {
