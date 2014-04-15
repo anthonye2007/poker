@@ -14,11 +14,40 @@ public class Elliott_Tools {
 	public static final int FOUR_OF_A_KIND = 8;
 	public static final int STRAIGHT_FLUSH = 9;
 	
-	public static final int CARDS_PER_HAND = 5;
+	public static final int CARDS_IN_FULL_BOARD = 5;
     public static final int CARDS_IN_POCKET = 2;
     public static int CARDS_IN_DECK = 52;
 
     public static int HIGH_THRESHOLD = 10;
+
+    public static double probOfOnePair(int[] pocket, int[] board) {
+        if (EstherTools.containsOnePair(pocket, board)) {
+            return 1.0;
+        }
+
+        if (board.length >= CARDS_IN_FULL_BOARD) {
+            return 0;
+        }
+
+        int possibleRanks = pocket.length;
+        int totalRanks = 13;
+        int numOpenSlots = Elliott_Tools.CARDS_IN_FULL_BOARD - board.length;
+
+        double expectedProbPerSlot = possibleRanks / (double) totalRanks;
+        return expectedProbPerSlot * numOpenSlots;
+    }
+
+    public static double probOfTwoPair(int[] pocket, int[] board) {
+        if (EstherTools.containsOnePair(pocket, board)) {
+            return 1.0;
+        }
+
+        if (board.length >= CARDS_IN_FULL_BOARD) {
+            return 0;
+        }
+
+        return 0;
+    }
 
     public static int getPointsOfHand(int[] pocket, int[] board) {
 		return getPointsOfHand(combine(pocket, board));
@@ -76,7 +105,7 @@ public class Elliott_Tools {
 		
 		int diff = Math.abs(getRank(a) - getRank(b));
 		
-		if (diff <= CARDS_PER_HAND - 1) {
+		if (diff <= CARDS_IN_FULL_BOARD - 1) {
 			isClose = true;
 		}
 		
@@ -217,7 +246,7 @@ public class Elliott_Tools {
     }
 
     private static boolean isEitherMissingXCards(List<Integer> first, List<Integer> second, int numMissing) {
-        return first.size() == CARDS_PER_HAND - numMissing || second.size() == CARDS_PER_HAND - numMissing;
+        return first.size() == CARDS_IN_FULL_BOARD - numMissing || second.size() == CARDS_IN_FULL_BOARD - numMissing;
     }
 
     private static double calculateProbOfStraightGivenFourCards(int[] pocket, int[] board) {
@@ -242,9 +271,9 @@ public class Elliott_Tools {
     }
 
     private static double findProbOfStraight(List<Integer> cards, int numCardsOnBoard) {
-        if (numCardsOnBoard >= CARDS_PER_HAND) {
+        if (numCardsOnBoard >= CARDS_IN_FULL_BOARD) {
             return doFindProbOfStraight(cards);
-        } else if (cards.size() == CARDS_PER_HAND - 1) {
+        } else if (cards.size() == CARDS_IN_FULL_BOARD - 1) {
             List<Integer> possibleSuccesses = determinePossibleSuccesses(cards);
             List<Integer> actualSuccesses = determineActualSuccesses(cards, possibleSuccesses);
             Map<Integer, Double> probForCard = calculateProbForEachSuccess(cards, actualSuccesses, numCardsOnBoard);
@@ -359,6 +388,21 @@ public class Elliott_Tools {
         }
 
         return array;
+    }
+
+    public static List<Integer> arrayToCardList(int[] cards) {
+        List<Integer> list = new ArrayList<>();
+        for (Integer card : cards) {
+            list.add(card);
+        }
+
+        return list;
+    }
+
+    public static void addArrayToList(int[] array, List<Integer> list) {
+        for (int card : array) {
+            list.add(card);
+        }
     }
 
 }
