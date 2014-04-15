@@ -66,6 +66,26 @@ public class ProbStraightTest {
     }
 
     @Test
+    public void NoPossibleStraightWithFourCards() {
+        int[] pocket = {0, 12};
+        int[] board = {1, 2, 10, 11};
+
+        double probability = Elliott_Tools.probOfStraight(pocket, board);
+
+        assertEquals(0, probability, 0.001);
+    }
+
+    @Test
+    public void NoPossibleStraightWithThreeCards() {
+        int[] pocket = {0, 12};
+        int[] board = {1, 5, 11};
+
+        double probability = Elliott_Tools.probOfStraight(pocket, board);
+
+        assertEquals(0, probability, 0.001);
+    }
+
+    @Test
     public void doesHaveStraight() {
         int[] pocket = {0, 1};
         int[] board = {2, 3, 4, 5, 6};

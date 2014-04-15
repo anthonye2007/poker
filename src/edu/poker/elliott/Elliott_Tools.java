@@ -149,7 +149,6 @@ public class Elliott_Tools {
         } else if (board.length == 3) {
             return calculateProbOfStraightGivenThreeCards(pocket, board);
         } else {
-            System.err.println("Should not have reached here.");
             return 0.0;
         }
     }
