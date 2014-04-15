@@ -29,6 +29,37 @@ public class Elliott_Tools {
             return 0;
         }
 
+        if (board.length == 4 && EstherTools.containsOnePair(pocket, board)) {
+            int numRemainingOfEachRank = 2;
+            int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+            return numRemainingOfEachRank / (double) remainingCards;
+        } else if (board.length == 3 && EstherTools.containsOnePair(pocket, board)) {
+            // could be a pair of any number already seen except the existing pair
+            // or either of the two open slots could be fulfill the current pair
+            int numRemainingOfEachRank = 3;
+            int numPossibleRanks = 4;
+            int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+            double probForFirstCard = (numRemainingOfEachRank * numPossibleRanks) / (double) remainingCards;
+            double probForSecondCard = (numRemainingOfEachRank - 1) / (double) (remainingCards - 1);
+            double probForPair = probForFirstCard * probForSecondCard;
+
+            int numRemainingOfRankInExistingPair = 2;
+            double probForNextCardOfExistingPair = numRemainingOfRankInExistingPair / (double) remainingCards;
+            int numOpenSlots = 2;
+            double probForRightCardToAppearInTwoSlots = probForNextCardOfExistingPair * numOpenSlots;
+
+            return probForPair + probForRightCardToAppearInTwoSlots;
+        } else if (board.length == 3) {
+            // could be a pair of any number already seen
+            int numRemainingOfEachRank = 3;
+            int numPossibleRanks = 5;
+            int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+            double probForFirstCard = (numRemainingOfEachRank * numPossibleRanks) / (double) remainingCards;
+            double probForSecondCard = (numRemainingOfEachRank - 1) / (double) (remainingCards - 1);
+
+            return probForFirstCard * probForSecondCard;
+        }
+
         return 0;
     }
 
