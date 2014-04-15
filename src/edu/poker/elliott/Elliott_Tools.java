@@ -142,25 +142,20 @@ public class Elliott_Tools {
     public static double probOfStraight(int[] pocket, int[] board) {
         assert(pocket.length == 2);
 
-        if (board.length == 5) {
-            return containsStraight(pocket, board);
+        if (board.length == 5 && containsStraight(pocket, board)) {
+            return 1.0;
         } else if (board.length == 4) {
-            return isPotentialStraightFourCards(pocket, board);
+            return calculateProbOfStraightGivenFourCards(pocket, board);
         } else if (board.length == 3) {
-            return isPotentialStraightThreeCards(pocket, board);
+            return calculateProbOfStraightGivenThreeCards(pocket, board);
         } else {
             System.err.println("Should not have reached here.");
             return 0.0;
         }
-
     }
 
-    private static double containsStraight(int[] pocket, int[] board) {
-        if(EstherTools.containsStraight(pocket, board)) {
-            return 1.0;
-        } else {
-            return 0.0;
-        }
+    private static boolean containsStraight(int[] pocket, int[] board) {
+        return EstherTools.containsStraight(pocket, board);
     }
 
     private static List<Integer> makeListOfPotentialCardsFromFirstPocketCard(int[] pocket, int[] board) {
@@ -195,7 +190,7 @@ public class Elliott_Tools {
         return closeToSecond;
     }
 
-    private static double isPotentialStraightThreeCards(int[] pocket, int[] board) {
+    private static double calculateProbOfStraightGivenThreeCards(int[] pocket, int[] board) {
         List<Integer> closeToFirst = makeListOfPotentialCardsFromFirstPocketCard(pocket, board);
         List<Integer> closeToSecond = makeListOfPotentialCardsFromSecondPocketCard(pocket, board);
 
@@ -226,7 +221,7 @@ public class Elliott_Tools {
         return first.size() == CARDS_PER_HAND - numMissing || second.size() == CARDS_PER_HAND - numMissing;
     }
 
-    private static double isPotentialStraightFourCards(int[] pocket, int[] board) {
+    private static double calculateProbOfStraightGivenFourCards(int[] pocket, int[] board) {
         List<Integer> closeToFirst = makeListOfPotentialCardsFromFirstPocketCard(pocket, board);
         List<Integer> closeToSecond = makeListOfPotentialCardsFromSecondPocketCard(pocket, board);
 
