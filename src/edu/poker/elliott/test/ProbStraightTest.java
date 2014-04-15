@@ -53,18 +53,16 @@ public class ProbStraightTest {
 
     @Test
     public void calculateProbAtFlopWithOnePossibility() {
+        // just need a four
         int[] pocket = {0, 1};
         int[] board = {2, 3, 5};
         double probability = Elliott_Tools.probOfStraight(pocket, board);
 
         int possibleWaysToGetAFour = 4;
-        int possibleWaysToGetASix = 4;
         int remainingCardsInDeck = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
         double probForFour = possibleWaysToGetAFour / (double) remainingCardsInDeck;
-        double probForSix = possibleWaysToGetASix / (double) (remainingCardsInDeck - 1);
 
-        double totalProb = probForFour + probForSix;
-        assertEquals(totalProb, probability, 0.001);
+        assertEquals(probForFour, probability, 0.001);
     }
 
     @Test
