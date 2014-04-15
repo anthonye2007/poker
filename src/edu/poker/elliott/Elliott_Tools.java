@@ -20,6 +20,18 @@ public class Elliott_Tools {
 
     public static int HIGH_THRESHOLD = 10;
 
+    public static double probOfThreeOfAKind(int[] pocket, int[] board) {
+        if (EstherTools.containsThreeOfAKind(pocket, board)) {
+            return 1.0;
+        }
+
+        if (board.length >= CARDS_IN_FULL_BOARD) {
+            return 0;
+        }
+
+        return 0;
+    }
+
     public static double probOfOnePair(int[] pocket, int[] board) {
         if (EstherTools.containsOnePair(pocket, board)) {
             return 1.0;
@@ -444,5 +456,4 @@ public class Elliott_Tools {
             list.add(card);
         }
     }
-
 }
