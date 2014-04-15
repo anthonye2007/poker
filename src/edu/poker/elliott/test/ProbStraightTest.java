@@ -66,26 +66,6 @@ public class ProbStraightTest {
     }
 
     @Test
-    public void calculateProbAtFlopWithTwoPossibilities() {
-        int[] pocket = {1, 1};
-        int[] board = {2, 3, 5};
-        double probability = Elliott_Tools.probOfStraight(pocket, board);
-
-        // need a 0 and a 4
-        int possibleWaysToGetFirstNumber = 4;
-        int remainingCardsInDeckAfterFirst = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
-        double probOfFirstNum = possibleWaysToGetFirstNumber / (double) remainingCardsInDeckAfterFirst;
-
-        int possibleWaysToGetSecondNumber = 4;
-        int remainingCardsInDeckAfterSecond = remainingCardsInDeckAfterFirst - 1;
-        double probOfSecondNum = possibleWaysToGetSecondNumber / (double) remainingCardsInDeckAfterSecond;
-
-        double probOfFirstFollowedBySecond = probOfFirstNum * probOfSecondNum;
-
-        assertEquals(probOfFirstFollowedBySecond, probability, 0.001);
-    }
-
-    @Test
     public void doesHaveStraight() {
         int[] pocket = {0, 1};
         int[] board = {2, 3, 4, 5, 6};
