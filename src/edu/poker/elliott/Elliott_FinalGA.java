@@ -76,7 +76,7 @@ public class Elliott_FinalGA extends Player {
             handStrength = Elliott_HandStrength.GOOD;
         } else if (Elliott_Tools.sameRank(pocket)
                 || Elliott_Tools.sameSuit(pocket)
-                || Elliott_Tools.isPossibleStraight(pocket[0], pocket[1])
+                || Elliott_Tools.areClose(pocket[0], pocket[1])
                 || Elliott_Tools.hasHighCard(pocket)) {
             handStrength = Elliott_HandStrength.OK;
         } else {

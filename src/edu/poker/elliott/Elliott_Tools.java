@@ -1,5 +1,8 @@
 package edu.poker.elliott;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Elliott_Tools {
 	
 	public static final int NO_PAIR = 1;
@@ -18,7 +21,7 @@ public class Elliott_Tools {
     public static int LOW_THRESHOLD = 5;
 
     public static int getPointsOfHand(int[] pocket, int[] board) {
-		return getPointsOfHand(concat(pocket, board));
+		return getPointsOfHand(combine(pocket, board));
 	}
 	
 	public static int getPointsOfHand(int[] allCards) {
@@ -43,7 +46,7 @@ public class Elliott_Tools {
 		}
 	}
 	
-	public static int[] concat(int[] A, int[] B) {
+	public static int[] combine(int[] A, int[] B) {
 		   int aLen = A.length;
 		   int bLen = B.length;
 		   int[] C = new int[aLen+bLen];
@@ -68,7 +71,7 @@ public class Elliott_Tools {
 		return getSuit(a) == getSuit(b);
 	}
 	
-	public static boolean isPossibleStraight(int a, int b) {
+	public static boolean areClose(int a, int b) {
 		boolean isClose = false;
 		
 		int diff = Math.abs(getRank(a) - getRank(b));
@@ -91,8 +94,8 @@ public class Elliott_Tools {
     public static boolean hasHighCard(int[] cards) {
         boolean retVal = false;
 
-        for (int i = 0; i < cards.length; i++) {
-            if (getRank(cards[i]) > 12)
+        for (int card : cards) {
+            if (getRank(card) > 12)
                 retVal = true;
         }
 
@@ -109,4 +112,93 @@ public class Elliott_Tools {
 
         return isPair && isHigh;
     }
+
+    public static double probOfStraight(int[] pocket, int[] board) {
+        assert(pocket.length == 2);
+
+        int first = pocket[0];
+        int second = pocket[1];
+
+        List<Integer> closeToFirst = new ArrayList<>();
+        closeToFirst.add(first);
+        List<Integer> closeToSecond = new ArrayList<>();
+        closeToSecond.add(second);
+
+        if (areClose(first, second)) {
+            closeToFirst.add(second);
+            closeToSecond.add(first);
+        }
+
+        for (int card : board) {
+            if (areClose(first, card)) {
+                closeToFirst.add(card);
+            }
+        }
+
+        for (int card : board) {
+            if (areClose(second, card)) {
+                closeToSecond.add(card);
+            }
+        }
+
+        double probFirst = findProbOfStraight(closeToFirst);
+        double probSecond = findProbOfStraight(closeToSecond);
+
+        return maxProb(probFirst, probSecond);
+    }
+
+    private static double maxProb(double probFirst, double probSecond) {
+        return probFirst >= probSecond ? probFirst : probSecond;
+    }
+
+    private static double findProbOfStraight(List<Integer> cards) {
+        if (cards.size() == CARDS_PER_HAND) {
+            return doFindProbOfStraight(cards);
+        }
+
+        return 0;
+    }
+
+    private static double doFindProbOfStraight(List<Integer> cards) {
+        assert(cards.size() == CARDS_PER_HAND);
+
+        if (containsStraight(cards)) {
+            return 1.0;
+        } else {
+            return 0.0;
+        }
+    }
+
+    public static boolean areAllClose(List<Integer> cards) {
+        for (int i = 0; i < cards.size(); i++) {
+            for (int j = 0; j < cards.size(); j++) {
+                if (i == j)
+                    continue;
+
+                if (!areClose(cards.get(i), cards.get(j))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean containsStraight(List<Integer> cards) {
+        int[] array = cardListToArray(cards);
+        return EstherTools.containsStraight(array);
+    }
+
+    public static int[] cardListToArray(List<Integer> cards) {
+        int[] array = new int[cards.size()];
+
+        int i = 0;
+        for (Integer card : cards) {
+            array[i] = card;
+            i++;
+        }
+
+        return array;
+    }
+
 }

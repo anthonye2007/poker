@@ -28,7 +28,7 @@ public class Elliott_AdvancedRules extends Player {
 			if (Elliott_Tools.sameRank(pocket)
 					|| Elliott_Tools.sameSuit(pocket)) {
 				return aggressive(data);
-			} else if (Elliott_Tools.isPossibleStraight(pocket[0], pocket[1]) || 
+			} else if (Elliott_Tools.areClose(pocket[0], pocket[1]) ||
 					data.getRaisesLeft() >= 2) {
 				// a possible straight is a long shot so only stay if no one pushes hard on first round
 				return stay(data);
