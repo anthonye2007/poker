@@ -143,10 +143,10 @@ public class Elliott_Tools {
         }
     }
 
-    private static void addCloseCards(int[] board, int first, List<Integer> closeToFirst) {
+    private static void addCloseCards(int[] board, int first, List<Integer> list) {
         for (int card : board) {
-            if (areClose(first, card)) {
-                closeToFirst.add(card);
+            if (areClose(first, card) && !list.contains(card)) {
+                list.add(card);
             }
         }
     }
