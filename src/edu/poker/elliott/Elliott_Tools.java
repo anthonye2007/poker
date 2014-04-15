@@ -1,7 +1,6 @@
 package edu.poker.elliott;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Elliott_Tools {
 	
@@ -16,9 +15,10 @@ public class Elliott_Tools {
 	public static final int STRAIGHT_FLUSH = 9;
 	
 	public static final int CARDS_PER_HAND = 5;
+    public static final int CARDS_IN_POCKET = 2;
+    public static int CARDS_IN_DECK = 52;
 
     public static int HIGH_THRESHOLD = 10;
-    public static int LOW_THRESHOLD = 5;
 
     public static int getPointsOfHand(int[] pocket, int[] board) {
 		return getPointsOfHand(combine(pocket, board));
@@ -120,48 +120,121 @@ public class Elliott_Tools {
         int second = pocket[1];
 
         List<Integer> closeToFirst = new ArrayList<>();
-        closeToFirst.add(first);
         List<Integer> closeToSecond = new ArrayList<>();
+
+        closeToFirst.add(first);
         closeToSecond.add(second);
 
-        if (areClose(first, second)) {
-            closeToFirst.add(second);
-            closeToSecond.add(first);
-        }
+        addPocketCardsIfClose(first, second, closeToFirst);
 
+        addCloseCards(board, first, closeToFirst);
+        addCloseCards(board, second, closeToSecond);
+
+        int numCardsSeen = pocket.length + board.length;
+        double probFirst = findProbOfStraight(closeToFirst, numCardsSeen);
+        double probSecond = findProbOfStraight(closeToSecond, numCardsSeen);
+
+        return maxProb(probFirst, probSecond);
+    }
+
+    private static void addPocketCardsIfClose(int first, int second, List<Integer> list) {
+        if (areClose(first, second)) {
+            list.add(second);
+        }
+    }
+
+    private static void addCloseCards(int[] board, int first, List<Integer> closeToFirst) {
         for (int card : board) {
             if (areClose(first, card)) {
                 closeToFirst.add(card);
             }
         }
-
-        for (int card : board) {
-            if (areClose(second, card)) {
-                closeToSecond.add(card);
-            }
-        }
-
-        double probFirst = findProbOfStraight(closeToFirst);
-        double probSecond = findProbOfStraight(closeToSecond);
-
-        return maxProb(probFirst, probSecond);
     }
 
     private static double maxProb(double probFirst, double probSecond) {
         return probFirst >= probSecond ? probFirst : probSecond;
     }
 
-    private static double findProbOfStraight(List<Integer> cards) {
-        if (cards.size() == CARDS_PER_HAND) {
+    private static double findProbOfStraight(List<Integer> cards, int numCardsSeen) {
+        if (numCardsSeen >= CARDS_PER_HAND + CARDS_IN_POCKET) {
             return doFindProbOfStraight(cards);
-        }
+        } else if (cards.size() == CARDS_PER_HAND - 1) {
+            List<Integer> possibleSuccesses = determinePossibleSuccesses(cards);
+            List<Integer> actualSuccesses = determineActualSuccesses(cards, possibleSuccesses);
+            Map<Integer, Double> probForCard = calculateProbForEachSuccess(cards, actualSuccesses, numCardsSeen);
 
-        return 0;
+            return calculateTotalProbForStraight(probForCard);
+        } else {
+            // generate all possible combinations
+            return 0.0;
+        }
+    }
+
+    private static double calculateTotalProbForStraight(Map<Integer, Double> probForCard) {
+        double totalProb = 0.0;
+        for (Double prob : probForCard.values()) {
+            totalProb += prob;
+        }
+        return totalProb;
+    }
+
+    private static Map<Integer, Double> calculateProbForEachSuccess(List<Integer> cards, List<Integer> actualSuccesses, int numCardsSeen) {
+        Map<Integer, Double> probForCard = new TreeMap<>();
+        for (Integer success : actualSuccesses) {
+            int numAlreadySeenOfThisRank = 0;
+            for (Integer card : cards) {
+                if (card.equals(success)) {
+                    numAlreadySeenOfThisRank++;
+                }
+            }
+
+            int numTotalCardsOfThisRank = 4;
+            int numCardsOfThisRankNotSeen = numTotalCardsOfThisRank - numAlreadySeenOfThisRank;
+            int numRemainingCards = CARDS_IN_DECK - numCardsSeen;
+
+            double probability = numCardsOfThisRankNotSeen / (double) numRemainingCards;
+            assert(probability >= 0.0 && probability <= 1.0);
+
+            probForCard.put(success, probability);
+        }
+        return probForCard;
+    }
+
+    private static List<Integer> determineActualSuccesses(List<Integer> cards, List<Integer> possibleSuccesses) {
+        List<Integer> actualSuccesses = new LinkedList<>();
+        for (Integer possible : possibleSuccesses) {
+            List<Integer> possibleCards = new LinkedList<>(cards);
+            possibleCards.add(possible);
+
+            if (containsStraight(possibleCards)) {
+                actualSuccesses.add(possible);
+            }
+        }
+        return actualSuccesses;
+    }
+
+    private static List<Integer> determinePossibleSuccesses(List<Integer> cards) {
+        List<Integer> possibleSuccesses = new LinkedList<>();
+        for (Integer card : cards) {
+            if (getRank(card) <= 12) {
+                int higher = card + 1;
+                onlyAddIfNotSeen(cards, possibleSuccesses, higher);
+            }
+            if (getRank(card) >= 1) {
+                int lower = card - 1;
+                onlyAddIfNotSeen(cards, possibleSuccesses, lower);
+            }
+        }
+        return possibleSuccesses;
+    }
+
+    private static void onlyAddIfNotSeen(List<Integer> cards, List<Integer> possibleSuccesses, int cardToAdd) {
+        if (!cards.contains(cardToAdd) && !possibleSuccesses.contains(cardToAdd)) {
+            possibleSuccesses.add(cardToAdd);
+        }
     }
 
     private static double doFindProbOfStraight(List<Integer> cards) {
-        assert(cards.size() == CARDS_PER_HAND);
-
         if (containsStraight(cards)) {
             return 1.0;
         } else {

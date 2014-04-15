@@ -11,6 +11,18 @@ import static org.junit.Assert.assertEquals;
 public class ProbStraightTest {
 
     @Test
+    public void testHaveFourLowCards() {
+        int[] pocket = {0, 1};
+        int[] board = {2, 3, 5, 6};
+        double probability = Elliott_Tools.probOfStraight(pocket, board);
+
+        int possibleWaysToGetAFour = 4;
+        int remainingCardsInDeck = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+        double expectedProb = possibleWaysToGetAFour / (double) remainingCardsInDeck;
+        assertEquals(expectedProb, probability, 0.001);
+    }
+
+    @Test
     public void doesHaveStraight() {
         int[] pocket = {0, 1};
         int[] board = {2, 3, 4, 5, 6};
@@ -20,7 +32,7 @@ public class ProbStraightTest {
     }
 
     @Test
-    public void doNotHaveStraight() {
+    public void doesNotHaveStraight() {
         int[] pocket = {1, 2};
         int[] board = {3, 4, 10, 11, 12};
 
