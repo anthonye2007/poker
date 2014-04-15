@@ -113,9 +113,154 @@ public class Elliott_Tools {
         return isPair && isHigh;
     }
 
+    /*public static double probOfStraightGivenFourCardsInBoard(int[] pocket, int[] board) {
+        assert(board.length == 4);
+        assert(pocket.length == 2);
+
+        int first = pocket[0];
+        int second = pocket[1];
+
+        List<Integer> closeToFirst = new ArrayList<>();
+        List<Integer> closeToSecond = new ArrayList<>();
+
+        closeToFirst.add(first);
+        closeToSecond.add(second);
+
+        if (areClose(first, second)) {
+            closeToFirst.add(second);
+            closeToSecond.add(first);
+        }
+
+        addCloseCards(board, first, closeToFirst);
+        addCloseCards(board, second, closeToSecond);
+
+        if (isPotentialStraight(closeToFirst) && isPotentialStraight(closeToSecond) && !closeToFirst.equals(closeToSecond)) {
+            // only need one more card for which there are four suits and 46 cards to choose from
+            return 2.0 * 4.0 / 46.0;
+        }
+
+        if (isPotentialStraight(closeToFirst) || isPotentialStraight(closeToSecond)) {
+            // only need one more card for which there are four suits and 46 cards to choose from
+            return 4.0 / 46.0;
+        }
+
+        return 0.0;
+    }*/
+
+    private static boolean isPotentialStraight(List<Integer> cardsNearPocket) {
+        List<Integer> potentialStraight = new ArrayList<>();
+        for (Integer item : cardsNearPocket) {
+            if (isItemCloseToEveryItemInList(item, potentialStraight)) {
+                potentialStraight.add(item);
+            }
+        }
+
+        if (potentialStraight.size() == 4) {
+            return true;
+        } else {
+            System.err.println("Did not have four in list: " + potentialStraight);
+            return true;
+        }
+    }
+
+    private static boolean isItemCloseToEveryItemInList(Integer item, List<Integer> list) {
+        for (Integer itemInList : list) {
+            if (!areClose(item, itemInList)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static double probOfStraight(int[] pocket, int[] board) {
         assert(pocket.length == 2);
 
+        if (board.length == 5) {
+            return containsStraight(pocket, board);
+        } else if (board.length == 4) {
+            return isPotentialStraightFourCards(pocket, board);
+        } else if (board.length == 3) {
+            return isPotentialStraightThreeCards(pocket, board);
+        } else {
+            System.err.println("Should not have reached here.");
+            return 0.0;
+        }
+
+    }
+
+    private static double containsStraight(int[] pocket, int[] board) {
+        if(EstherTools.containsStraight(pocket, board)) {
+            return 1.0;
+        } else {
+            return 0.0;
+        }
+    }
+
+    private static List<Integer> makeListOfPotentialCardsFromFirstPocketCard(int[] pocket, int[] board) {
+        List<Integer> closeToFirst = new ArrayList<>();
+        int first = pocket[0];
+        int second = pocket[1];
+
+        closeToFirst.add(first);
+
+        if (areClose(first, second)) {
+            closeToFirst.add(second);
+        }
+
+        addCloseCards(board, first, closeToFirst);
+
+        return closeToFirst;
+    }
+
+    private static List<Integer> makeListOfPotentialCardsFromSecondPocketCard(int[] pocket, int[] board) {
+        List<Integer> closeToSecond = new ArrayList<>();
+        int first = pocket[0];
+        int second = pocket[1];
+
+        closeToSecond.add(second);
+
+        if (areClose(first, second)) {
+            closeToSecond.add(first);
+        }
+
+        addCloseCards(board, second, closeToSecond);
+
+        return closeToSecond;
+    }
+
+    private static double isPotentialStraightThreeCards(int[] pocket, int[] board) {
+        List<Integer> closeToFirst = makeListOfPotentialCardsFromFirstPocketCard(pocket, board);
+        List<Integer> closeToSecond = makeListOfPotentialCardsFromSecondPocketCard(pocket, board);
+
+        if (containsStraight(closeToFirst) || containsStraight(closeToSecond)) {
+            // could be a straight already
+            return 1.0;
+        } else if (isEitherMissingXCards(closeToFirst, closeToSecond, 1)) {
+            // could just need one card for straight
+            double probFirst = findProbOfStraight(closeToFirst, board.length);
+            double probSecond = findProbOfStraight(closeToSecond, board.length);
+
+            return maxProb(probFirst, probSecond);
+        } else if (isEitherMissingXCards(closeToFirst, closeToSecond, 2)) {
+            // could need two cards for straight
+            int remainingCards = CARDS_IN_DECK - pocket.length - board.length;
+            int numUnseenCardsOfNeededRank = 4;
+            double probOfFirstCard = numUnseenCardsOfNeededRank / (double) remainingCards;
+            double probOfSecondCard = numUnseenCardsOfNeededRank / (double) (remainingCards - 1);
+
+            return probOfFirstCard * probOfSecondCard;
+        } else {
+            // anything else is probability of zero
+            return 0;
+        }
+    }
+
+    private static boolean isEitherMissingXCards(List<Integer> first, List<Integer> second, int numMissing) {
+        return first.size() == CARDS_PER_HAND - numMissing || second.size() == CARDS_PER_HAND - numMissing;
+    }
+
+    private static double isPotentialStraightFourCards(int[] pocket, int[] board) {
         int first = pocket[0];
         int second = pocket[1];
 
@@ -132,7 +277,6 @@ public class Elliott_Tools {
 
         double probFirst = findProbOfStraight(closeToFirst, board.length);
         double probSecond = findProbOfStraight(closeToSecond, board.length);
-
         return maxProb(probFirst, probSecond);
     }
 
@@ -164,7 +308,7 @@ public class Elliott_Tools {
 
             return calculateTotalProbForStraight(probForCard);
         } else {
-            // generate all possible combinations
+            // TODO generate all possible combinations
             return 0.0;
         }
     }
