@@ -46,6 +46,46 @@ public class Elliott_Tools {
             return 0;
         }
 
+        if (board.length == 4 && EstherTools.containsOnePair(pocket, board)) {
+            int numCardsAlreadyPaired = 2;
+
+            int numRemainingOfEachRank = 3;
+            int numPossibleRanks = board.length + pocket.length - numCardsAlreadyPaired;
+            int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+            double probForOneRank = numRemainingOfEachRank / (double) remainingCards;
+            return probForOneRank * numPossibleRanks;
+        } else if (board.length == 3 && EstherTools.containsOnePair(pocket, board)) {
+            int numRemainingOfEachRank = 3;
+            int numCardsAlreadyPaired = 2;
+            int numPossibleRanks = board.length + pocket.length - numCardsAlreadyPaired;
+            int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+            double probForOneRank = numRemainingOfEachRank / (double) remainingCards;
+            double probForMultipleRanks = probForOneRank * numPossibleRanks;
+
+            int numRanksSeen = numPossibleRanks + 1;
+            int numRemainingOfUnseenRank = 4;
+            double probForFirstCardOfUnseenRank = numRanksSeen * numRemainingOfUnseenRank / (double) (remainingCards - 1);
+            double probForSecondCardOfSameRank = (numRemainingOfUnseenRank - 1) / (double) (remainingCards - 2);
+            double probOfUnseenPair = probForFirstCardOfUnseenRank * probForSecondCardOfSameRank;
+
+            return probForMultipleRanks + probOfUnseenPair;
+        } else if (board.length == 3) {
+            int numRemainingOfEachRank = 3;
+            int numCardsAlreadyPaired = 0;
+            int numPossibleRanks = board.length + pocket.length - numCardsAlreadyPaired;
+            int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
+            double probForOneRank = numRemainingOfEachRank / (double) remainingCards;
+            double probForMultipleRanks = probForOneRank * numPossibleRanks;
+
+            int numRanksSeen = numPossibleRanks + 1;
+            int numRemainingOfUnseenRank = 4;
+            double probForFirstCardOfUnseenRank = numRanksSeen * numRemainingOfUnseenRank / (double) (remainingCards - 1);
+            double probForSecondCardOfSameRank = (numRemainingOfUnseenRank - 1) / (double) (remainingCards - 2);
+            double probOfUnseenPair = probForFirstCardOfUnseenRank * probForSecondCardOfSameRank;
+
+            return probForMultipleRanks + probOfUnseenPair;
+        }
+
         return 0;
     }
 
