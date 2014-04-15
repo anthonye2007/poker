@@ -2,10 +2,7 @@ package edu.poker.elliott;
 
 import java.util.Random;
 
-/**
- * Created by anthonyelliott on 3/14/14.
- */
-public class Action {
+public class Elliott_Action {
 
     public static final char RAISE = 'r';
     public static final char STAY = 's';

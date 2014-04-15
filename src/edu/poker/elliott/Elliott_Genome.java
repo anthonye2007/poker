@@ -21,7 +21,7 @@ public class Elliott_Genome {
             Map<Elliott_HandStrength, Character> handToAction = new TreeMap<>();
 
             for (Elliott_HandStrength hand : Elliott_HandStrength.values()) {
-                char c = Action.randomAction();
+                char c = Elliott_Action.randomAction();
 
                 handToAction.put(hand, c);
             }
@@ -51,7 +51,7 @@ public class Elliott_Genome {
     }
 
     public static int numGenes() {
-        return Elliott_BettingRound.values().length * Elliott_HandStrength.values().length * Action.numActions();
+        return Elliott_BettingRound.values().length * Elliott_HandStrength.values().length * Elliott_Action.numActions();
     }
 
     public String toString() {

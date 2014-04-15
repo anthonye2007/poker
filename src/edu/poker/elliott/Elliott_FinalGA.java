@@ -25,17 +25,20 @@ package edu.poker.elliott;
  * Each generation takes about 10 seconds to run when the population size is 100. I ran several thousand generations
  * and the algorithm produced 'rrrsssrssrrsrrrs' as the final genome.  This genome had a score of 1737 in the
  * tournament against five of the agents from the previous submission (Advanced Rules Agent).
+ *
+ * An earlier version of the genetic algorithm actually generated a slightly better genome (rrrfssrsrrrrrrrr)
+ * with a score closer to 1800.
  */
-public class Elliott extends Player {
+public class Elliott_FinalGA extends Player {
 
     private Elliott_Genome genome;
 
-    public Elliott() {
+    public Elliott_FinalGA() {
         // Genome determined via genetic algorithm
-        this.genome = new Elliott_Genome("rrrsssrssrrsrrrs");
+        this.genome = new Elliott_Genome("rrrfssrsrrrrrrrr");
     }
 
-    public Elliott(Elliott_Genome genome) {
+    public Elliott_FinalGA(Elliott_Genome genome) {
         this.genome = genome;
     }
 
@@ -144,11 +147,11 @@ public class Elliott extends Player {
         char act = genome.getAction(round, handStrength);
         String action = null;
 
-        if (act == Action.RAISE) {
+        if (act == Elliott_Action.RAISE) {
             action = raise(data);
-        } else if (act == Action.STAY) {
+        } else if (act == Elliott_Action.STAY) {
             action = stay(data);
-        } else if (act == Action.FOLD) {
+        } else if (act == Elliott_Action.FOLD) {
             action = fold();
         } else {
             System.err.println("Bad action: " + act);

@@ -35,7 +35,7 @@ public class Elliott_GeneticAlgorithm {
         Map<Elliott_Genome, Integer> genomes = new HashMap<>(numGenomes);
 
         for (Elliott_Genome genome : population) {
-            Elliott player = new Elliott(genome);
+            Elliott_FinalGA player = new Elliott_FinalGA(genome);
             int score = fitness(player);
             genomes.put(genome, score);
         }
@@ -166,7 +166,7 @@ public class Elliott_GeneticAlgorithm {
             // tweak small number of genes
             for (int i = 0; i < rand.nextInt(3); i++) {
                 int indexToTweak = rand.nextInt(Elliott_Genome.numGenes());
-                char c = Action.randomAction();
+                char c = Elliott_Action.randomAction();
                 StringBuilder str = new StringBuilder(elite.toString());
                 str.setCharAt(indexToTweak, c);
 
