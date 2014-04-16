@@ -20,6 +20,65 @@ public class Elliott_Tools {
 
     public static int HIGH_THRESHOLD = 10;
 
+    public static double probOfFlush(int[] pocket, int[] board) {
+        if (EstherTools.containsFlush(pocket, board)) {
+            return 1.0;
+        }
+
+        if (board.length >= CARDS_IN_FULL_BOARD) {
+            return 0;
+        }
+
+        // must have 3 cards of same suit after flop in order to have chance at flush
+        int[] numOfEachSuit = new int[] {0, 0, 0, 0};
+
+        for (int card : pocket) {
+            int suit = getSuit(card);
+            numOfEachSuit[suit]++;
+        }
+
+        for (int card : board) {
+            int suit = getSuit(card);
+            numOfEachSuit[suit]++;
+        }
+
+        int maxSuit = -1;
+        int maxOccurrencesOfSuit = -1;
+
+        for (int i = 0; i < numOfEachSuit.length; i++) {
+            if (numOfEachSuit[i] > maxOccurrencesOfSuit) {
+                maxOccurrencesOfSuit = numOfEachSuit[i];
+                maxSuit = i;
+            }
+        }
+
+        if (maxOccurrencesOfSuit < 0 || maxSuit < 0) {
+            return 0;
+        }
+
+        int ranksPerSuit = 13;
+        int remainingInSuit = ranksPerSuit - maxOccurrencesOfSuit;
+
+        int openSlots = CARDS_IN_FULL_BOARD - board.length;
+        int numOfSuitStillNeeded = 5 - maxOccurrencesOfSuit;
+        int remainingCards = CARDS_IN_DECK - pocket.length - board.length;
+
+        if (openSlots == 1 && numOfSuitStillNeeded == 1) {
+            return remainingInSuit / (double) remainingCards;
+        } else if (openSlots == 2) {
+            double probOfFirstCard = remainingInSuit / (double) remainingCards;
+            double probOfSecondCard = (remainingInSuit - 1) / (double) (remainingCards - 1);
+
+            if (numOfSuitStillNeeded == 1) {
+                return probOfFirstCard + probOfSecondCard;
+            } else {
+                return probOfFirstCard * probOfSecondCard;
+            }
+        }
+
+        return 0;
+    }
+
     public static double probOfThreeOfAKind(int[] pocket, int[] board) {
         if (EstherTools.containsThreeOfAKind(pocket, board)) {
             return 1.0;
@@ -487,4 +546,6 @@ public class Elliott_Tools {
             list.add(card);
         }
     }
+
+
 }
