@@ -16,74 +16,94 @@ public class Elliott extends Player {
 
     @Override
     public String getAction(TableData data) {
-        int[] pocket = data.getPocket();
-        int[] board = data.getBoard();
-        int round = data.getBettingRound();
-        int score = Elliott_Tools.getPointsOfHand(pocket, board);
-
-
         // first round only considers pocket cards
-        switch (round) {
+        switch (data.getBettingRound()) {
             case 1:
-                if (Elliott_Tools.isHighPair(pocket)
-                        || Elliott_Tools.sameSuit(pocket)) {
-                    return aggressive(data);
-                } else if (Elliott_Tools.areClose(pocket[0], pocket[1]) ||
-                        data.getRaisesLeft() >= 2 || Elliott_Tools.hasHighCard(pocket)) {
-                    // a possible straight is a long shot so only stay if no one pushes hard on first round
-                    return stay(data);
-                } else {
-                    return passive(data);
-                }
+                return roundOne(data);
             case 2: // now have 3 cards in board
-
-                double[] probabilities = calculateProbabilities(data);
-                int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
-                int bias = 0;
-                double weightedSum = -bias;
-
-                for (int i = 0; i < probabilities.length - 1; i++) {
-                    weightedSum += probabilities[i] * weights[i];
-                }
-                System.out.println(String.format("%.2f", weightedSum));
-
-                if (score >= Elliott_Tools.THREE_OF_A_KIND) {
-                    // if near maximum score then aggressive
-                    return aggressive(data);
-                } else if (score >= Elliott_Tools.ONE_PAIR) {
-                    // if near average score then stay
-                    return stay(data);
-                } else {
-                    // if below average score then fold
-                    return passive(data);
-                }
+                return roundTwo(data);
             case 3: // now have 4 cards in board
-                if (score >= Elliott_Tools.FULL_HOUSE) {
-                    return aggressive(data);
-                } else if (score >= Elliott_Tools.TWO_PAIR) {
-                    return stay(data);
-                } else {
-                    return passive(data);
-                }
+                return roundThree(data);
             case 4: // now have all 7 cards (board=5 pocket=2)
-                int scoreFromBoard = Elliott_Tools.getPointsOfHand(board);
-
-                // ensure my pocket cards are actually worthwhile
-                if (score <= scoreFromBoard) {
-                    return passive(data);
-                }
-
-                if (score >= Elliott_Tools.FULL_HOUSE) {
-                    return aggressive(data);
-                } else if (score >= Elliott_Tools.TWO_PAIR) {
-                    return stay(data);
-                } else {
-                    return passive(data);
-                }
+                return roundFour(data);
             default:
                 return passive(data);
         }
 
+    }
+
+    private String roundFour(TableData data) {
+        double[] probabilities = calculateProbabilities(data);
+        int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
+        int bias = 2;
+        double weightedSum = -bias;
+
+        for (int i = 0; i < probabilities.length - 1; i++) {
+            weightedSum += probabilities[i] * weights[i];
+        }
+        System.out.println(String.format("%.2f", weightedSum));
+
+        if (weightedSum > 2) {
+            return aggressive(data);
+        } else if (weightedSum > 0) {
+            return stay(data);
+        } else {
+            return passive(data);
+        }
+    }
+
+    private String roundThree(TableData data) {
+        double[] probabilities = calculateProbabilities(data);
+        int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
+        int bias = 2;
+        double weightedSum = -bias;
+
+        for (int i = 0; i < probabilities.length - 1; i++) {
+            weightedSum += probabilities[i] * weights[i];
+        }
+        System.out.println(String.format("%.2f", weightedSum));
+
+        if (weightedSum > 2) {
+            return aggressive(data);
+        } else if (weightedSum > 0) {
+            return stay(data);
+        } else {
+            return passive(data);
+        }
+    }
+
+    private String roundTwo(TableData data) {
+        double[] probabilities = calculateProbabilities(data);
+        int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
+        int bias = 2;
+        double weightedSum = -bias;
+
+        for (int i = 0; i < probabilities.length - 1; i++) {
+            weightedSum += probabilities[i] * weights[i];
+        }
+        System.out.println(String.format("%.2f", weightedSum));
+
+        if (weightedSum > 2) {
+            return aggressive(data);
+        } else if (weightedSum > 0) {
+            return stay(data);
+        } else {
+            return passive(data);
+        }
+    }
+
+    private String roundOne(TableData data) {
+        int[] pocket = data.getPocket();
+        if (Elliott_Tools.isHighPair(pocket)
+                || Elliott_Tools.sameSuit(pocket)) {
+            return aggressive(data);
+        } else if (Elliott_Tools.areClose(pocket[0], pocket[1]) ||
+                data.getRaisesLeft() >= 2 || Elliott_Tools.hasHighCard(pocket)) {
+            // a possible straight is a long shot so only stay if no one pushes hard on first round
+            return stay(data);
+        } else {
+            return passive(data);
+        }
     }
 
     private double[] calculateProbabilities(TableData data) {
