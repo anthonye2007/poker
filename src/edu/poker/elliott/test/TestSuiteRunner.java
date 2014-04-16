@@ -11,13 +11,13 @@ public class TestSuiteRunner {
         TestSuite suite = new TestSuite();
 
         suite.addTest(new JUnit4TestAdapter(ElliottToolsTest.class));
-        suite.addTest(new JUnit4TestAdapter(ProbFlush.class));
-        suite.addTest(new JUnit4TestAdapter(ProbFourOfAKind.class));
-        suite.addTest(new JUnit4TestAdapter(ProbFullHouse.class));
+        suite.addTest(new JUnit4TestAdapter(ProbFlushTest.class));
+        suite.addTest(new JUnit4TestAdapter(ProbFourOfAKindTest.class));
+        suite.addTest(new JUnit4TestAdapter(ProbFullHouseTest.class));
         suite.addTest(new JUnit4TestAdapter(ProbPairTest.class));
         suite.addTest(new JUnit4TestAdapter(ProbStraightTest.class));
         suite.addTest(new JUnit4TestAdapter(ProbStraightFlushTest.class));
-        suite.addTest(new JUnit4TestAdapter(ProbThreeOfAKind.class));
+        suite.addTest(new JUnit4TestAdapter(ProbThreeOfAKindTest.class));
         suite.addTest(new JUnit4TestAdapter(ProbTwoPairTest.class));
 
         return suite;

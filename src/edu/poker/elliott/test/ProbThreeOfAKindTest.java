@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ProbThreeOfAKind {
+public class ProbThreeOfAKindTest {
 
     @Test
     public void testThreeOfAKindExistsInFullBoard() {
@@ -48,7 +48,7 @@ public class ProbThreeOfAKind {
     }
 
     @Test
-    public void testOneOpenSlotWithPair() {
+    public void testOneOpenSlot() {
         int[] pocket = {0, 12};
         int[] board = {1, 10, 0, 2};
 

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ProbFlush {
+public class ProbFlushTest {
 
     @Test
     public void testExistsInFullBoard() {

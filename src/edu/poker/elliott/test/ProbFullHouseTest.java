@@ -5,14 +5,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ProbFullHouse {
+public class ProbFullHouseTest {
 
     @Test
     public void testExistsInFullBoard() {
         int[] pocket = {0, 3};
         int[] board = {2, 2, 0, 12, 0};
 
-        double probability = Elliott_Tools.probFullHouse(pocket, board);
+        double probability = Elliott_Tools.probOfFullHouse(pocket, board);
 
         assertEquals(1, probability, 0.001);
     }
@@ -22,7 +22,7 @@ public class ProbFullHouse {
         int[] pocket = {0, 12};
         int[] board = {1, 2, 10, 11, 3};
 
-        double probability = Elliott_Tools.probFullHouse(pocket, board);
+        double probability = Elliott_Tools.probOfFullHouse(pocket, board);
 
         assertEquals(0, probability, 0.001);
     }
@@ -32,7 +32,7 @@ public class ProbFullHouse {
         int[] pocket = {0, 3};
         int[] board = {2, 2, 0, 12};
 
-        double probability = Elliott_Tools.probFullHouse(pocket, board);
+        double probability = Elliott_Tools.probOfFullHouse(pocket, board);
 
         int possibleSuccesses = 2 * 2;
         int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
@@ -47,7 +47,7 @@ public class ProbFullHouse {
         int[] pocket = {0, 0};
         int[] board = {2, 1, 0, 12};
 
-        double probability = Elliott_Tools.probFullHouse(pocket, board);
+        double probability = Elliott_Tools.probOfFullHouse(pocket, board);
 
         int possibleSuccesses = 3 * 3;
         int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
@@ -62,7 +62,7 @@ public class ProbFullHouse {
         int[] pocket = {0, 3};
         int[] board = {2, 1, 0};
 
-        double probability = Elliott_Tools.probFullHouse(pocket, board);
+        double probability = Elliott_Tools.probOfFullHouse(pocket, board);
 
         int possibleSuccesses = 3 * 3;
         int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
