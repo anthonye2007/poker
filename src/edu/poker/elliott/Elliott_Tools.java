@@ -73,7 +73,7 @@ public class Elliott_Tools {
         return suits.size();
     }
 
-    public static double probFullHouse(int[] pocket, int[] board) {
+    public static double probOfFullHouse(int[] pocket, int[] board) {
         if (EstherTools.containsFullHouse(pocket, board)) {
             return 1.0;
         }
@@ -177,11 +177,11 @@ public class Elliott_Tools {
             return 0;
         }
 
-        if (board.length == 4 && EstherTools.containsOnePair(pocket, board)) {
+        if (board.length == 4 && containsPair(pocket, board)) {
             int numRemainingOfEachRank = 2;
             int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
             return numRemainingOfEachRank / (double) remainingCards;
-        } else if (board.length == 3 && EstherTools.containsOnePair(pocket, board)) {
+        } else if (board.length == 3 && containsPair(pocket, board)) {
             // could be a pair of any number already seen except the existing pair
             // or either of the two open slots could be fulfill the current pair
             int numRemainingOfEachRank = 3;
@@ -211,8 +211,34 @@ public class Elliott_Tools {
         return 0;
     }
 
+    public static boolean containsPair(int[] pocket, int[] board) {
+        List<Integer> boardList = arrayToCardList(board);
+
+        if (pocket[0] == pocket[1]) {
+            return true;
+        }
+
+        for (int card : pocket) {
+            if (boardList.contains(card)) {
+                return true;
+            }
+        }
+
+        for (int i = 0; i < boardList.size(); i++) {
+            for (int j = 0; j < boardList.size(); j++) {
+                if (i == j)
+                    continue;
+
+                if (boardList.get(i) == boardList.get(j))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     public static double probOfOnePair(int[] pocket, int[] board) {
-        if (EstherTools.containsOnePair(pocket, board)) {
+        if (containsPair(pocket, board)) {
             return 1.0;
         }
 
