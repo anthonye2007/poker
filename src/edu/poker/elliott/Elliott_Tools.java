@@ -20,6 +20,39 @@ public class Elliott_Tools {
 
     public static int HIGH_THRESHOLD = 10;
 
+    public static double probFullHouse(int[] pocket, int[] board) {
+        if (EstherTools.containsFullHouse(pocket, board)) {
+            return 1.0;
+        }
+
+        if (board.length >= CARDS_IN_FULL_BOARD) {
+            return 0;
+        }
+
+        int openSlots = CARDS_IN_FULL_BOARD - board.length;
+        int remainingCards = CARDS_IN_DECK - pocket.length - board.length;
+
+        if (openSlots == 1) {
+            int possibleSuccesses = 4;
+
+            if (EstherTools.containsThreeOfAKind(pocket, board)) {
+                possibleSuccesses = 9;
+            }
+
+            return possibleSuccesses / (double) remainingCards;
+        } else if (openSlots == 2) {
+            int possibleSuccesses = 9;
+            int numOfSameRankRemaining = 2;
+
+            double probOfFirstCard = possibleSuccesses / (double) remainingCards;
+            double probOfSecondCard = numOfSameRankRemaining / (double) (remainingCards - 1);
+
+            return probOfFirstCard * probOfSecondCard;
+        }
+
+        return 0;
+    }
+
     public static double probOfFlush(int[] pocket, int[] board) {
         if (EstherTools.containsFlush(pocket, board)) {
             return 1.0;
@@ -546,6 +579,4 @@ public class Elliott_Tools {
             list.add(card);
         }
     }
-
-
 }
