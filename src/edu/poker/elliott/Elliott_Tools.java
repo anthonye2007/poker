@@ -355,7 +355,7 @@ public class Elliott_Tools {
         boolean retVal = false;
 
         for (int card : cards) {
-            if (getRank(card) > 12)
+            if (getRank(card) > HIGH_THRESHOLD)
                 retVal = true;
         }
 
