@@ -20,6 +20,49 @@ public class Elliott_Tools {
 
     public static int HIGH_THRESHOLD = 10;
 
+    public static double probOfFourOfAKind(int[] pocket, int[] board) {
+        if (EstherTools.containsFourOfAKind(pocket, board)) {
+            return 1.0;
+        }
+
+        if (board.length >= CARDS_IN_FULL_BOARD) {
+            return 0;
+        }
+
+        Set<Integer> suits = new TreeSet<>();
+        for (int card : pocket) {
+            suits.add(card);
+        }
+
+        for (int card : board) {
+            suits.add(card);
+        }
+
+        int numDifferentSuits = suits.size();
+        int openSlots = CARDS_IN_FULL_BOARD - board.length;
+        int remainingCards = CARDS_IN_DECK - pocket.length - board.length;
+
+        if (openSlots == 1) {
+            int possibleSuccesses = 1;
+            if (numDifferentSuits == 2) {
+                possibleSuccesses = 2;
+            }
+
+            return possibleSuccesses / (double) remainingCards;
+        } else if (openSlots == 2) {
+            double probOfFirstCard = 1 / (double) remainingCards;
+            double probOfSecondCard = 1 / (double) (remainingCards - 1);
+
+            if (EstherTools.containsThreeOfAKind(pocket, board)) {
+                return probOfFirstCard + probOfSecondCard;
+            }
+
+            return probOfFirstCard * probOfSecondCard;
+        }
+
+        return 0;
+    }
+
     public static double probFullHouse(int[] pocket, int[] board) {
         if (EstherTools.containsFullHouse(pocket, board)) {
             return 1.0;
