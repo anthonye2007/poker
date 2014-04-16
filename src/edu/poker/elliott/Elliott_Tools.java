@@ -29,16 +29,7 @@ public class Elliott_Tools {
             return 0;
         }
 
-        Set<Integer> suits = new TreeSet<>();
-        for (int card : pocket) {
-            suits.add(card);
-        }
-
-        for (int card : board) {
-            suits.add(card);
-        }
-
-        int numDifferentSuits = suits.size();
+        int numDifferentSuits = countNumDifferentSuits(pocket, board);
         int openSlots = CARDS_IN_FULL_BOARD - board.length;
         int remainingCards = CARDS_IN_DECK - pocket.length - board.length;
 
@@ -61,6 +52,19 @@ public class Elliott_Tools {
         }
 
         return 0;
+    }
+
+    private static int countNumDifferentSuits(int[] pocket, int[] board) {
+        Set<Integer> suits = new TreeSet<>();
+        for (int card : pocket) {
+            suits.add(card);
+        }
+
+        for (int card : board) {
+            suits.add(card);
+        }
+
+        return suits.size();
     }
 
     public static double probFullHouse(int[] pocket, int[] board) {
@@ -106,29 +110,9 @@ public class Elliott_Tools {
         }
 
         // must have 3 cards of same suit after flop in order to have chance at flush
-        int[] numOfEachSuit = new int[] {0, 0, 0, 0};
+        int maxOccurrencesOfSuit = getMaxOccurrencesOfSuit(pocket, board);
 
-        for (int card : pocket) {
-            int suit = getSuit(card);
-            numOfEachSuit[suit]++;
-        }
-
-        for (int card : board) {
-            int suit = getSuit(card);
-            numOfEachSuit[suit]++;
-        }
-
-        int maxSuit = -1;
-        int maxOccurrencesOfSuit = -1;
-
-        for (int i = 0; i < numOfEachSuit.length; i++) {
-            if (numOfEachSuit[i] > maxOccurrencesOfSuit) {
-                maxOccurrencesOfSuit = numOfEachSuit[i];
-                maxSuit = i;
-            }
-        }
-
-        if (maxOccurrencesOfSuit < 0 || maxSuit < 0) {
+        if (maxOccurrencesOfSuit < 0) {
             return 0;
         }
 
@@ -153,6 +137,29 @@ public class Elliott_Tools {
         }
 
         return 0;
+    }
+
+    private static int getMaxOccurrencesOfSuit(int[] pocket, int[] board) {
+        int[] numOfEachSuit = new int[] {0, 0, 0, 0};
+
+        for (int card : pocket) {
+            int suit = getSuit(card);
+            numOfEachSuit[suit]++;
+        }
+
+        for (int card : board) {
+            int suit = getSuit(card);
+            numOfEachSuit[suit]++;
+        }
+
+        int maxOccurrencesOfSuit = -1;
+
+        for (int numForSuit : numOfEachSuit) {
+            if (numForSuit > maxOccurrencesOfSuit) {
+                maxOccurrencesOfSuit = numForSuit;
+            }
+        }
+        return maxOccurrencesOfSuit;
     }
 
     public static double probOfThreeOfAKind(int[] pocket, int[] board) {
