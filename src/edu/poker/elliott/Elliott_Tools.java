@@ -88,7 +88,7 @@ public class Elliott_Tools {
         if (openSlots == 1) {
             int possibleSuccesses = 4;
 
-            if (EstherTools.containsThreeOfAKind(pocket, board)) {
+            if (containsThreeOfAKind(pocket, board)) {
                 possibleSuccesses = 9;
             }
 
@@ -169,7 +169,7 @@ public class Elliott_Tools {
     }
 
     public static double probOfThreeOfAKind(int[] pocket, int[] board) {
-        if (EstherTools.containsThreeOfAKind(pocket, board)) {
+        if (containsThreeOfAKind(pocket, board)) {
             return 1.0;
         }
 
@@ -229,7 +229,7 @@ public class Elliott_Tools {
                 if (i == j)
                     continue;
 
-                if (boardList.get(i) == boardList.get(j))
+                if (boardList.get(i).equals(boardList.get(j)))
                     return true;
             }
         }
@@ -263,7 +263,7 @@ public class Elliott_Tools {
             return 0;
         }
 
-        if (board.length == 4 && EstherTools.containsOnePair(pocket, board)) {
+        if (board.length == 4 && containsPair(pocket, board)) {
             int numCardsAlreadyPaired = 2;
 
             int numRemainingOfEachRank = 3;
@@ -271,7 +271,7 @@ public class Elliott_Tools {
             int remainingCards = Elliott_Tools.CARDS_IN_DECK - pocket.length - board.length;
             double probForOneRank = numRemainingOfEachRank / (double) remainingCards;
             return probForOneRank * numPossibleRanks;
-        } else if (board.length == 3 && EstherTools.containsOnePair(pocket, board)) {
+        } else if (board.length == 3 && containsPair(pocket, board)) {
             int numRemainingOfEachRank = 3;
             int numCardsAlreadyPaired = 2;
             int numPossibleRanks = board.length + pocket.length - numCardsAlreadyPaired;
@@ -660,5 +660,33 @@ public class Elliott_Tools {
         for (int card : array) {
             list.add(card);
         }
+    }
+
+    public static boolean containsThreeOfAKind(int[] pocket, int[] board) {
+        List<Integer> allCards = new ArrayList<>();
+        allCards.add(pocket[0]);
+        allCards.add(pocket[1]);
+
+        for (int card : board) {
+            allCards.add(card);
+        }
+
+        if (allCards.size() < 5) {
+            return false;
+        }
+
+        for (int i = 0; i < allCards.size(); i++) {
+            for (int j = 0; j < allCards.size(); j++) {
+                for (int k = 0; k < allCards.size(); k++) {
+                    if (i == j || j == k || i == k)
+                        continue;
+
+                    if (allCards.get(i).equals(allCards.get(j)) && allCards.get(i).equals(allCards.get(k)))
+                        return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
