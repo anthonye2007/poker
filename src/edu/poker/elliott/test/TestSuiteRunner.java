@@ -16,6 +16,7 @@ public class TestSuiteRunner {
         suite.addTest(new JUnit4TestAdapter(ProbFullHouse.class));
         suite.addTest(new JUnit4TestAdapter(ProbPairTest.class));
         suite.addTest(new JUnit4TestAdapter(ProbStraightTest.class));
+        suite.addTest(new JUnit4TestAdapter(ProbStraightFlushTest.class));
         suite.addTest(new JUnit4TestAdapter(ProbThreeOfAKind.class));
         suite.addTest(new JUnit4TestAdapter(ProbTwoPairTest.class));
 

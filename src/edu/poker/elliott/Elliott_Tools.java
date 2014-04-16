@@ -20,6 +20,10 @@ public class Elliott_Tools {
 
     public static int HIGH_THRESHOLD = 10;
 
+    public static double probOfStraightFlush(int[] pocket, int[] board) {
+        return probOfFlush(pocket, board) * probOfStraight(pocket, board);
+    }
+
     public static double probOfFourOfAKind(int[] pocket, int[] board) {
         if (EstherTools.containsFourOfAKind(pocket, board)) {
             return 1.0;
