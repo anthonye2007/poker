@@ -35,13 +35,13 @@ public class Elliott extends Player {
     private String roundFour(TableData data) {
         double[] probabilities = calculateProbabilities(data);
         int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
-        int bias = 2;
+        double bias = 0.4;
         double weightedSum = -bias;
 
         for (int i = 0; i < probabilities.length - 1; i++) {
-            weightedSum += probabilities[i] * weights[i];
+            if (probabilities[i] == 1.0)
+                weightedSum += probabilities[i] * weights[i];
         }
-        //System.out.println(String.format("%.2f", weightedSum));
 
         if (weightedSum > 2) {
             return aggressive(data);
@@ -55,13 +55,12 @@ public class Elliott extends Player {
     private String roundThree(TableData data) {
         double[] probabilities = calculateProbabilities(data);
         int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
-        int bias = 2;
+        double bias = 1.5;
         double weightedSum = -bias;
 
         for (int i = 0; i < probabilities.length - 1; i++) {
             weightedSum += probabilities[i] * weights[i];
         }
-        //System.out.println(String.format("%.2f", weightedSum));
 
         if (weightedSum > 2) {
             return aggressive(data);
@@ -75,13 +74,12 @@ public class Elliott extends Player {
     private String roundTwo(TableData data) {
         double[] probabilities = calculateProbabilities(data);
         int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
-        int bias = 2;
+        double bias = 0.8;
         double weightedSum = -bias;
 
         for (int i = 0; i < probabilities.length - 1; i++) {
             weightedSum += probabilities[i] * weights[i];
         }
-        //System.out.println(String.format("%.2f", weightedSum));
 
         if (weightedSum > 2) {
             return aggressive(data);
@@ -93,26 +91,20 @@ public class Elliott extends Player {
     }
 
     private String roundOne(TableData data) {
-        int[] pocket = data.getPocket();
-
-        for (int card : pocket) {
-            System.out.print(card + " ");
-        }
-
         double[] probabilities = calculateProbabilities(data);
         int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
-        int bias = 0;
+        double bias = 0.5;
         double weightedSum = -bias;
 
         for (int i = 0; i < probabilities.length - 1; i++) {
-            if (i == 0) {
-                System.out.println(String.format("%.5f", probabilities[i]));
-            }
             weightedSum += probabilities[i] * weights[i];
         }
-        //System.out.println(String.format("%.5f", weightedSum));
 
-        if (weightedSum > 2) {
+        if (Elliott_Tools.hasHighCard(data.getPocket())) {
+            weightedSum += 1;
+        }
+
+        if (weightedSum > 1) {
             return aggressive(data);
         } else if (weightedSum > 0) {
             return stay(data);
