@@ -29,13 +29,24 @@ public class Elliott extends Player {
                         || Elliott_Tools.sameSuit(pocket)) {
                     return aggressive(data);
                 } else if (Elliott_Tools.areClose(pocket[0], pocket[1]) ||
-                        data.getRaisesLeft() >= 2) {
+                        data.getRaisesLeft() >= 2 || Elliott_Tools.hasHighCard(pocket)) {
                     // a possible straight is a long shot so only stay if no one pushes hard on first round
                     return stay(data);
                 } else {
                     return passive(data);
                 }
             case 2: // now have 3 cards in board
+
+                double[] probabilities = calculateProbabilities(data);
+                int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
+                int bias = 0;
+                double weightedSum = -bias;
+
+                for (int i = 0; i < probabilities.length - 1; i++) {
+                    weightedSum += probabilities[i] * weights[i];
+                }
+                System.out.println(String.format("%.2f", weightedSum));
+
                 if (score >= Elliott_Tools.THREE_OF_A_KIND) {
                     // if near maximum score then aggressive
                     return aggressive(data);
@@ -73,6 +84,24 @@ public class Elliott extends Player {
                 return passive(data);
         }
 
+    }
+
+    private double[] calculateProbabilities(TableData data) {
+        double[] probabilities = new double[Elliott_Tools.NUM_POSSIBLE_HANDS];
+
+        int[] pocket = data.getPocket();
+        int[] board = data.getBoard();
+
+        probabilities[0] = Elliott_Tools.probOfOnePair(pocket, board);
+        probabilities[1] = Elliott_Tools.probOfTwoPair(pocket, board);
+        probabilities[2] = Elliott_Tools.probOfThreeOfAKind(pocket, board);
+        probabilities[3] = Elliott_Tools.probOfStraight(pocket, board);
+        probabilities[4] = Elliott_Tools.probOfFlush(pocket, board);
+        probabilities[5] = Elliott_Tools.probOfFullHouse(pocket, board);
+        probabilities[6] = Elliott_Tools.probOfFourOfAKind(pocket, board);
+        probabilities[7] = Elliott_Tools.probOfStraightFlush(pocket, board);
+
+        return probabilities;
     }
 
     private String stay(TableData data) {
