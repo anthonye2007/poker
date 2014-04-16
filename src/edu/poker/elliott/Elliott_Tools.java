@@ -214,7 +214,7 @@ public class Elliott_Tools {
     public static boolean containsPair(int[] pocket, int[] board) {
         List<Integer> boardList = arrayToCardList(board);
 
-        if (pocket[0] == pocket[1]) {
+        if (sameRank(pocket[0], pocket[1])) {
             return true;
         }
 
@@ -229,7 +229,7 @@ public class Elliott_Tools {
                 if (i == j)
                     continue;
 
-                if (boardList.get(i).equals(boardList.get(j)))
+                if (sameRank(boardList.get(i), (boardList.get(j))))
                     return true;
             }
         }
@@ -671,7 +671,7 @@ public class Elliott_Tools {
             allCards.add(card);
         }
 
-        if (allCards.size() < 5) {
+        if (allCards.size() < 3) {
             return false;
         }
 
@@ -681,7 +681,7 @@ public class Elliott_Tools {
                     if (i == j || j == k || i == k)
                         continue;
 
-                    if (allCards.get(i).equals(allCards.get(j)) && allCards.get(i).equals(allCards.get(k)))
+                    if (sameRank(allCards.get(i), allCards.get(j)) && sameRank(allCards.get(j), allCards.get(k)))
                         return true;
                 }
             }

@@ -41,7 +41,7 @@ public class Elliott extends Player {
         for (int i = 0; i < probabilities.length - 1; i++) {
             weightedSum += probabilities[i] * weights[i];
         }
-        System.out.println(String.format("%.2f", weightedSum));
+        //System.out.println(String.format("%.2f", weightedSum));
 
         if (weightedSum > 2) {
             return aggressive(data);
@@ -61,7 +61,7 @@ public class Elliott extends Player {
         for (int i = 0; i < probabilities.length - 1; i++) {
             weightedSum += probabilities[i] * weights[i];
         }
-        System.out.println(String.format("%.2f", weightedSum));
+        //System.out.println(String.format("%.2f", weightedSum));
 
         if (weightedSum > 2) {
             return aggressive(data);
@@ -81,7 +81,7 @@ public class Elliott extends Player {
         for (int i = 0; i < probabilities.length - 1; i++) {
             weightedSum += probabilities[i] * weights[i];
         }
-        System.out.println(String.format("%.2f", weightedSum));
+        //System.out.println(String.format("%.2f", weightedSum));
 
         if (weightedSum > 2) {
             return aggressive(data);
@@ -94,12 +94,27 @@ public class Elliott extends Player {
 
     private String roundOne(TableData data) {
         int[] pocket = data.getPocket();
-        if (Elliott_Tools.isHighPair(pocket)
-                || Elliott_Tools.sameSuit(pocket)) {
+
+        for (int card : pocket) {
+            System.out.print(card + " ");
+        }
+
+        double[] probabilities = calculateProbabilities(data);
+        int[] weights = new int[] {1, 2, 3, 5, 8, 13, 21, 34};
+        int bias = 0;
+        double weightedSum = -bias;
+
+        for (int i = 0; i < probabilities.length - 1; i++) {
+            if (i == 0) {
+                System.out.println(String.format("%.5f", probabilities[i]));
+            }
+            weightedSum += probabilities[i] * weights[i];
+        }
+        //System.out.println(String.format("%.5f", weightedSum));
+
+        if (weightedSum > 2) {
             return aggressive(data);
-        } else if (Elliott_Tools.areClose(pocket[0], pocket[1]) ||
-                data.getRaisesLeft() >= 2 || Elliott_Tools.hasHighCard(pocket)) {
-            // a possible straight is a long shot so only stay if no one pushes hard on first round
+        } else if (weightedSum > 0) {
             return stay(data);
         } else {
             return passive(data);

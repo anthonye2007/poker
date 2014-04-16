@@ -1,10 +1,11 @@
 package edu.poker.elliott.test;
 
-import static org.junit.Assert.*;
-
+import edu.poker.elliott.Elliott_Tools;
 import org.junit.Test;
 
-import edu.poker.elliott.Elliott_Tools;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ElliottToolsTest {
 
@@ -25,5 +26,45 @@ public class ElliottToolsTest {
 		
 		assertTrue(Elliott_Tools.sameSuit(new int[] {0,0}));
 	}
+
+    @Test
+    public void testShouldContainPair() {
+        int[] pocket = {0, 0};
+        int[] board = {1, 2, 3};
+
+        assertEquals(true, Elliott_Tools.containsPair(pocket, board));
+    }
+
+    @Test
+    public void testShouldContainPairWhenBoardEmpty() {
+        int[] pocket = {0, 13};
+        int[] board = {};
+
+        assertEquals(true, Elliott_Tools.containsPair(pocket, board));
+    }
+
+    @Test
+    public void testShouldNotContainPairWhenBoardEmpty() {
+        int[] pocket = {0, 1};
+        int[] board = {};
+
+        assertEquals(false, Elliott_Tools.containsPair(pocket, board));
+    }
+
+    @Test
+    public void testShouldContainThree() {
+        int[] pocket = {0, 13};
+        int[] board = {13*2, 2, 3};
+
+        assertEquals(true, Elliott_Tools.containsThreeOfAKind(pocket, board));
+    }
+
+    @Test
+    public void testShouldNotContainThree() {
+        int[] pocket = {0, 0};
+        int[] board = {1, 2, 3};
+
+        assertEquals(false, Elliott_Tools.containsThreeOfAKind(pocket, board));
+    }
 
 }
